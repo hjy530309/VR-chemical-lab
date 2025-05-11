@@ -1,37 +1,86 @@
 using System;
 using MySql.Data.MySqlClient;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class DatabaseManager : MonoBehaviour
 {
-    void Start()
+
+    public bool isIdChecked = false;
+    string connStr = "Server=127.0.0.1;Database=vrlab_db;User ID=root;Password=0000;Pooling=false;Port=3308;";
+
+    // 회원가입 버튼 클릭 시 호출할 메서드
+    public void RegisterUser(string userId, string name, string email, string password)
     {
-        string connStr = "Server=127.0.0.1;Database=vrlab_db;User ID=root;Password=0000;Pooling=false;Port=3308;";
-        MySqlConnection conn = new MySqlConnection(connStr);
-
-        try
+        using (MySqlConnection conn = new MySqlConnection(connStr))
         {
-            conn.Open();
-            Debug.Log("MySQL 연결 성공!");
-
-            string query = "SELECT * FROM User";
-            MySqlCommand cmd = new MySqlCommand(query, conn);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-
-            while (rdr.Read())
+            try
             {
-                Debug.Log(rdr[0] + " - " + rdr[1]);
-            }
+                conn.Open();
+                string query = "INSERT INTO User (user_id, name, email, pwd) VALUES (@id, @name, @email, @pwd)";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", userId);
+                cmd.Parameters.AddWithValue("@name", name);
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@pwd", password);
 
-            rdr.Close();
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError("DB 연결 실패: " + ex.Message);
-        }
-        finally
-        {
-            conn.Close();
+                int result = cmd.ExecuteNonQuery();
+                Debug.Log(result > 0 ? "회원가입 성공!" : "회원가입 실패!");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("DB 오류: " + ex.Message);
+            }
         }
     }
+
+    public TMP_InputField inputUser_id;
+    public TMP_Text duplicateCheckResultText;
+
+    // 🔍 ID 중복확인
+    public void CheckDuplicateId()
+    {
+        string userId = inputUser_id.text.Trim();
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            duplicateCheckResultText.text = "아이디를 입력하세요.";
+            duplicateCheckResultText.color = Color.red;
+            isIdChecked = false;
+            return;
+        }
+
+        using (MySqlConnection conn = new MySqlConnection(connStr))
+        {
+            try
+            {
+                conn.Open();
+                string query = "SELECT COUNT(*) FROM User WHERE user_id = @userId";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                if (count > 0)
+                {
+                    duplicateCheckResultText.text = "이미 사용 중인 아이디입니다.";
+                    duplicateCheckResultText.color = Color.red;
+                    isIdChecked = false;
+                }
+                else
+                {
+                    duplicateCheckResultText.text = "사용 가능한 아이디입니다.";
+                    duplicateCheckResultText.color = Color.green;
+                    isIdChecked = true;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError("중복확인 오류: " + ex.Message);
+            }
+        }
+    }
+
 }

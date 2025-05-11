@@ -4,6 +4,7 @@ using UnityEngine;
 using OpenAI;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using TMPro;
 
 public class ChatGptManager : MonoBehaviour
 {
@@ -14,6 +15,10 @@ public OnResponseEvent OnResponse;
     private OpenAIApi openAI = new OpenAIApi("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");
     private List<ChatMessage> messages = new List<ChatMessage>();
     public InputField inputField;
+    public Animator animator;
+    public TextMeshProUGUI speechText;
+    public GameObject speechBubble;
+    public float hideDelay = 2f;
 
     public async void AskChatGPT(string newText)
     {
@@ -21,7 +26,9 @@ public OnResponseEvent OnResponse;
         newMessage.Content = newText;
         newMessage.Role = "user";
 
+        speechText.text = "";
         messages.Add(newMessage);
+        speechBubble.SetActive(true);
 
         CreateChatCompletionRequest request = new CreateChatCompletionRequest();
         request.Messages = messages;
@@ -37,22 +44,52 @@ public OnResponseEvent OnResponse;
             Debug.Log(chatResponse.Content);
 
             OnResponse.Invoke(chatResponse.Content);
+
+            StartCoroutine(TypeText(chatResponse.Content));
         }
+
         if (inputField != null)
         {
             inputField.text = "";
         }
+
+        int randomIndex = Random.Range(0, 2);
+        animator.SetInteger("talkIndex", randomIndex);
+        animator.SetTrigger("talking");
+
     }
 
-    // Start is called before the first frame update
-    void Start()
+    // 코루틴 함수: 텍스트를 하나씩 출력
+    private IEnumerator TypeText(string text, int maxLineLength = 20)
+{
+    speechText.text = "";
+    int currentLineLength = 0;
+
+    foreach (char letter in text)
     {
-        
+        speechText.text += letter;
+        currentLineLength++;
+
+        // 최대 줄 길이를 넘기면 줄바꿈 추가
+        if (currentLineLength >= maxLineLength && letter == ' ')
+        {
+            speechText.text += "\n";
+            currentLineLength = 0;
+        }
+
+        yield return new WaitForSeconds(0.1f);
+    }
+    StartCoroutine(HideSpeechBubbleAfterDelay());
+}
+
+
+    private IEnumerator HideSpeechBubbleAfterDelay()
+    {
+        yield return new WaitForSeconds(hideDelay);  // hideDelay 시간 대기
+        speechBubble.SetActive(false);  // 말풍선 숨기기
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Start() {
+        speechBubble.SetActive(true);
     }
 }
