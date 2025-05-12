@@ -90,6 +90,6 @@ public OnResponseEvent OnResponse;
     }
 
     void Start() {
-        speechBubble.SetActive(true);
+        speechBubble.SetActive(false);
     }
 }
