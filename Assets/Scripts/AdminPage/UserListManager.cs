@@ -2,18 +2,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using MySql.Data.MySqlClient;
 using TMPro;
+using System.Diagnostics;
 
 public class UserListManager : MonoBehaviour
 {
     public TMP_InputField searchField;
     public GameObject blockPrefab;      // 사용자 블록 프리팹
     public Transform contentTransform;  // ScrollView의 Content
+    public TMP_Text NowUserText;
 
     string connStr = "Server=127.0.0.1;Database=vrlab_db;User ID=root;Password=0000;Pooling=false;Port=3308;";
 
     void Start()
     {
         LoadUserList();
+        string userId = UserInfoManager.Instance.userId;
+        NowUserText.text = userId;
     }
 
     void LoadUserList()
@@ -21,7 +25,7 @@ public class UserListManager : MonoBehaviour
         using (MySqlConnection conn = new MySqlConnection(connStr))
         {
             conn.Open();
-            string sql = "SELECT name, DATE_FORMAT(create_time, '%Y-%m-%d') AS created_date FROM room";
+            string sql = "SELECT name, DATE_FORMAT(create_time, '%Y-%m-%d') AS created_date, create_time FROM room";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -30,13 +34,14 @@ public class UserListManager : MonoBehaviour
             while (reader.Read())
             {
                 string name = reader["name"].ToString();
-                string create_time = reader["created_date"].ToString();
+                string format_time = reader["created_date"].ToString();
+                string create_time = reader["create_time"].ToString();
 
                 // 블록 생성
                 GameObject block = Instantiate(blockPrefab, contentTransform);
-                block.name = Count.ToString();
+                block.name = create_time.ToString();
                 block.transform.Find("title").GetComponent<TextMeshProUGUI>().text = name;
-                block.transform.Find("date").GetComponent<TextMeshProUGUI>().text = create_time;
+                block.transform.Find("date").GetComponent<TextMeshProUGUI>().text = format_time;
 
                 Count++;
             }
@@ -63,7 +68,7 @@ public class UserListManager : MonoBehaviour
             try
             {
                 conn.Open();
-                string sql = "SELECT name, DATE_FORMAT(create_time, '%Y-%m-%d') AS created_date FROM room";
+                string sql = "SELECT name, DATE_FORMAT(create_time, '%Y-%m-%d') AS created_date, create_time FROM room";
                 if (search != "")
                     {
                         sql += " WHERE name LIKE '%" + search + "%' OR DATE_FORMAT(create_time, '%Y-%m-%d') LIKE '%" + search + "%'";
@@ -77,13 +82,14 @@ public class UserListManager : MonoBehaviour
                 while (reader.Read())
             {
                 string name = reader["name"].ToString();
-                string create_time = reader["created_date"].ToString();
+                string format_time = reader["created_date"].ToString();
+                string create_time = reader["create_time"].ToString();
 
                 // 블록 생성
                 GameObject block = Instantiate(blockPrefab, contentTransform);
-                block.name = Count.ToString();
+                block.name = create_time.ToString();
                 block.transform.Find("title").GetComponent<TextMeshProUGUI>().text = name;
-                block.transform.Find("date").GetComponent<TextMeshProUGUI>().text = create_time;
+                block.transform.Find("date").GetComponent<TextMeshProUGUI>().text = format_time;
 
                 Count++;
             }
@@ -91,7 +97,7 @@ public class UserListManager : MonoBehaviour
             }
             catch (MySqlException ex)
             {
-                Debug.LogError("DB 연결 실패: " + ex.Message);
+                UnityEngine.Debug.LogError("DB 연결 실패: " + ex.Message);
             }
         }
     }
@@ -102,5 +108,10 @@ public class UserListManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    public void SelectedRoom()
+    {
+        UnityEngine.Debug.Log(SelectablePanel.currentlySelected.name);
     }
 }

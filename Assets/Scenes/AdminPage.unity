@@ -1220,7 +1220,7 @@ GameObject:
   - component: {fileID: 772608897}
   - component: {fileID: 772608896}
   m_Layer: 5
-  m_Name: LoginCanvas
+  m_Name: RoomListCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2072,6 +2072,7 @@ MonoBehaviour:
   searchField: {fileID: 290970387}
   blockPrefab: {fileID: 3757199576465760200, guid: 2d9b34bdf79d6274d93775700487a510, type: 3}
   contentTransform: {fileID: 1444753689}
+  NowUserText: {fileID: 934481745}
 --- !u!4 &1266508367
 Transform:
   m_ObjectHideFlags: 0
@@ -2214,9 +2215,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: LoginManager, Assembly-CSharp
-        m_MethodName: OnClickLogin
+      - m_Target: {fileID: 1266508366}
+        m_TargetAssemblyTypeName: UserListManager, Assembly-CSharp
+        m_MethodName: SelectedRoom
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
