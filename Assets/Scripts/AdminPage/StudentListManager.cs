@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using MySql.Data.MySqlClient;
 using TMPro;
 using System.Diagnostics;
+using System;
 
 public class StudentListManager : MonoBehaviour
 {
@@ -35,7 +36,8 @@ public class StudentListManager : MonoBehaviour
             {
                 string name = reader["name"].ToString();
                 string format_time = reader["created_date"].ToString();
-                string create_time = reader["create_time"].ToString();
+                DateTime createTime = Convert.ToDateTime(reader["create_time"]);
+                string create_time = createTime.ToString("yyyy-MM-dd HH:mm:ss");
 
                 // 블록 생성
                 GameObject block = Instantiate(blockPrefab, contentTransform);
@@ -83,7 +85,8 @@ public class StudentListManager : MonoBehaviour
             {
                 string name = reader["name"].ToString();
                 string format_time = reader["created_date"].ToString();
-                string create_time = reader["create_time"].ToString();
+                DateTime createTime = Convert.ToDateTime(reader["create_time"]);
+                string create_time = createTime.ToString("yyyy-MM-dd HH:mm:ss");
 
                 // 블록 생성
                 GameObject block = Instantiate(blockPrefab, contentTransform);

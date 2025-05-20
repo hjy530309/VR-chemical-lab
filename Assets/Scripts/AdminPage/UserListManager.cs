@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using MySql.Data.MySqlClient;
 using TMPro;
 using System.Diagnostics;
+using System;
 
 public class UserListManager : MonoBehaviour
 {
@@ -35,11 +36,13 @@ public class UserListManager : MonoBehaviour
             {
                 string name = reader["name"].ToString();
                 string format_time = reader["created_date"].ToString();
-                string create_time = reader["create_time"].ToString();
+
+                DateTime createTime = Convert.ToDateTime(reader["create_time"]);
+                string create_time = createTime.ToString("yyyy-MM-dd HH:mm:ss");
 
                 // 블록 생성
                 GameObject block = Instantiate(blockPrefab, contentTransform);
-                block.name = create_time.ToString();
+                block.name = create_time; // create_time은 이제 24시간 형식 문자열입니다.
                 block.transform.Find("title").GetComponent<TextMeshProUGUI>().text = name;
                 block.transform.Find("date").GetComponent<TextMeshProUGUI>().text = format_time;
 
@@ -83,11 +86,13 @@ public class UserListManager : MonoBehaviour
             {
                 string name = reader["name"].ToString();
                 string format_time = reader["created_date"].ToString();
-                string create_time = reader["create_time"].ToString();
+
+                DateTime createTime = Convert.ToDateTime(reader["create_time"]);
+                string create_time = createTime.ToString("yyyy-MM-dd HH:mm:ss");
 
                 // 블록 생성
                 GameObject block = Instantiate(blockPrefab, contentTransform);
-                block.name = create_time.ToString();
+                block.name = create_time; // create_time은 이제 24시간 형식 문자열입니다.
                 block.transform.Find("title").GetComponent<TextMeshProUGUI>().text = name;
                 block.transform.Find("date").GetComponent<TextMeshProUGUI>().text = format_time;
 
