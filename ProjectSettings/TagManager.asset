@@ -6,6 +6,7 @@ TagManager:
   tags:
   - RoomLight
   - Ground
+  - ExperimentObj
   layers:
   - Default
   - TransparentFX
