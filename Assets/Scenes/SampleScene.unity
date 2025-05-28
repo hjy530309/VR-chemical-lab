@@ -2504,6 +2504,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 456776003, guid: d14ccad9a6cb98343abc69e41b5db873, type: 3}
+      propertyPath: sensitivity.x
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 456776003, guid: d14ccad9a6cb98343abc69e41b5db873, type: 3}
+      propertyPath: sensitivity.y
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 4119735069849007212, guid: d14ccad9a6cb98343abc69e41b5db873, type: 3}
       propertyPath: m_Name
       value: DesktopRig
@@ -2551,6 +2559,10 @@ PrefabInstance:
     - target: {fileID: 4119735069849007216, guid: d14ccad9a6cb98343abc69e41b5db873, type: 3}
       propertyPath: locomotionLayerMask.m_Bits
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4119735069849007216, guid: d14ccad9a6cb98343abc69e41b5db873, type: 3}
+      propertyPath: leftControllerMoveAction.m_Action.m_Name
+      value: Left Controller Move
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6252,8 +6264,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4208948369037581461, guid: 72aacf5ad018ef84f8c2f1796da09345, type: 3}
+      propertyPath: moveSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4208948369037581461, guid: 72aacf5ad018ef84f8c2f1796da09345, type: 3}
       propertyPath: locomotionLayerMask.m_Bits
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4208948369037581461, guid: 72aacf5ad018ef84f8c2f1796da09345, type: 3}
+      propertyPath: leftControllerMoveAction.m_Action.m_Name
+      value: Left Controller Move
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

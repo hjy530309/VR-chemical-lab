@@ -43,10 +43,17 @@ namespace Fusion.XR.Host.Locomotion
         // If locomotion constraints are needed, a ILocomotionValidationHandler can restrict them
         ILocomotionValidationHandler locomotionValidationHandler;
 
+        // 이동
+        [Header("Smooth Locomotion")]
+        public InputActionProperty leftControllerMoveAction;
+        public float moveSpeed = 2f;
+
+
         private void Awake()
         {
             rig = GetComponentInParent<HardwareRig>();
             locomotionValidationHandler = GetComponentInParent<ILocomotionValidationHandler>();
+            leftControllerMoveAction.EnableWithDefaultXRBindings(leftBindings: new List<string> { "joystick" }); // 이동
 
             if (teleportBeamers.Count == 0) teleportBeamers = new List<RayBeamer>(GetComponentsInChildren<RayBeamer>());
             foreach (var beamer in teleportBeamers)
@@ -55,7 +62,7 @@ namespace Fusion.XR.Host.Locomotion
             }
 
             var bindings = new List<string> { "joystick" };
-            leftControllerTurnAction.EnableWithDefaultXRBindings(leftBindings: bindings);
+            //leftControllerTurnAction.EnableWithDefaultXRBindings(leftBindings: bindings);
             rightControllerTurnAction.EnableWithDefaultXRBindings(rightBindings: bindings);
         }
 
@@ -68,6 +75,7 @@ namespace Fusion.XR.Host.Locomotion
         protected virtual void Update()
         {
             CheckSnapTurn();
+            HandleSmoothLocomotion(); // 이동
         }
 
         protected virtual void CheckSnapTurn()
@@ -83,15 +91,15 @@ namespace Fusion.XR.Host.Locomotion
                 return;
             }
 
-            var leftStickTurn = leftControllerTurnAction.action.ReadValue<Vector2>().x;
+            //var leftStickTurn = leftControllerTurnAction.action.ReadValue<Vector2>().x;
             var rightStickTurn = rightControllerTurnAction.action.ReadValue<Vector2>().x;
 
-            if (Mathf.Abs(leftStickTurn) > rotationInputThreshold)
-            {
-                timeStarted = Time.time;
-                StartCoroutine(Rotate(Mathf.Sign(leftStickTurn) * snapDegree));
-            }
-            else if (Mathf.Abs(rightStickTurn) > rotationInputThreshold)
+            //if (Mathf.Abs(leftStickTurn) > rotationInputThreshold)
+            //{
+            //    timeStarted = Time.time;
+            //    StartCoroutine(Rotate(Mathf.Sign(leftStickTurn) * snapDegree));
+            //}
+            if (Mathf.Abs(rightStickTurn) > rotationInputThreshold)
             {
                 timeStarted = Time.time;
                 StartCoroutine(Rotate(Mathf.Sign(rightStickTurn) * snapDegree));
@@ -129,6 +137,26 @@ namespace Fusion.XR.Host.Locomotion
             {
                 StartCoroutine(rig.FadedTeleport(position));
             }
+        }
+
+        //이동
+        protected virtual void HandleSmoothLocomotion()
+        {
+            Vector2 moveInput = leftControllerMoveAction.action.ReadValue<Vector2>();
+            if (moveInput.sqrMagnitude < 0.01f) return;
+
+            // 헤드셋의 전방 방향 기준으로 이동
+            Vector3 forward = rig.headset.transform.forward;
+            Vector3 right = rig.headset.transform.right;
+
+            // 수직 성분 제거 (지면에 평행하게)
+            forward.y = 0;
+            right.y = 0;
+            forward.Normalize();
+            right.Normalize();
+
+            Vector3 moveDirection = forward * moveInput.y + right * moveInput.x;
+            transform.position += moveSpeed * Time.deltaTime * moveDirection;
         }
     }
 }
