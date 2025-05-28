@@ -11545,7 +11545,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 0
+    m_RotationOrder: 4
   TopLeft: {x: 0, y: 0, z: 0}
   TopRight: {x: 0, y: 0, z: 0}
   BottomLeft: {x: 0, y: 0, z: 0}
@@ -11775,9 +11775,10 @@ MonoBehaviour:
   Splat: {fileID: 1033381741606936, guid: 5f678655718270f429e48d2ef9441eec, type: 3}
   SplatMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   maxSplatDistance: 5
-  shatterAtSpeed: 1
+  shatterAtImpulse: 1
+  shatterAtAcceleration: 50
   allowShattering: 1
   onlyAllowShatterOnCollision: 1
   previousPos: {x: 0, y: 0, z: 0}

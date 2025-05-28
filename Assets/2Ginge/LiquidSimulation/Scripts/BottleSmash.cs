@@ -30,7 +30,9 @@ public class BottleSmash : MonoBehaviour {
     //distance of hte raycast
     public float maxSplatDistance = 5.0f;
     //if the change in velocity is greater than this THEN it breaks
-    public float shatterAtSpeed = 2.0f;
+    public float shatterAtImpulse = 3.0f;  // impulse 임계값
+public float shatterAtAcceleration = 50.0f;  // 가속도 임계값
+
     //if the is disabled then it wont shatter by itself.
     public bool allowShattering = true;
     //if it collides with an object then and only then is there a period of 0.2f seconds to shatter.
@@ -166,17 +168,29 @@ public class BottleSmash : MonoBehaviour {
 
         collidedRecently -= Time.deltaTime;
         Vector3 currentVelocity = (transform.position - previousPos) / Time.fixedDeltaTime;
-        if ((onlyAllowShatterOnCollision && collidedRecently >= 0.0f) | !onlyAllowShatterOnCollision)
-        {
-            if (allowShattering)
-            {
-                if (Vector3.Distance(currentVelocity, previousVelocity) > shatterAtSpeed || _lastHitSpeed > shatterAtSpeed)
-                {
-                    if (!broken)
-                        Smash();
-                }
-            }
-        }
+        Vector3 acceleration = (currentVelocity - previousVelocity) / Time.fixedDeltaTime;
+        float accelerationMagnitude = acceleration.magnitude;
+
+        if (allowShattering && !broken)
+{
+    if (onlyAllowShatterOnCollision)
+{
+    if (collidedRecently > 0.0f && _lastHitSpeed > 3.0f)
+    {
+                    Smash();
+    }
+}
+else
+{
+    if (accelerationMagnitude > 5.0f && _lastHitSpeed > 3.0f)
+    {
+        Smash();
+    }
+}
+
+}
+
+
         _lastHitSpeed = 0;
 
         previousVelocity = currentVelocity;

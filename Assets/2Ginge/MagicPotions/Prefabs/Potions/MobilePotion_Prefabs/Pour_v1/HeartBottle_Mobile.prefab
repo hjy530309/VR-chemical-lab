@@ -5813,7 +5813,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   maxSplatDistance: 5
-  shatterAtSpeed: 1
+  shatterAtImpulse: 3
+  shatterAtAcceleration: 50
   allowShattering: 1
   onlyAllowShatterOnCollision: 1
   previousPos: {x: 0, y: 0, z: 0}
@@ -12918,7 +12919,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 0
+    m_RotationOrder: 4
   TopLeft: {x: 0.27182832, y: 0.06578909, z: -2.2676272}
   TopRight: {x: 0.28108272, y: 0.06578909, z: -2.2676272}
   BottomLeft: {x: 0.27182832, y: 0.06578909, z: -2.2583728}

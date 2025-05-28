@@ -577,7 +577,7 @@ MonoBehaviour:
   Splat: {fileID: 1569978052003978, guid: 4c3152ca08b746546b868824e5f4be87, type: 3}
   SplatMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
   maxSplatDistance: 5
   shatterAtSpeed: 1
   allowShattering: 1
