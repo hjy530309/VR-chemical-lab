@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa316a3d12ddaa4e83caf66ca7e9804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  changeMesh: {fileID: 0}
+  yOffset: 0
   mats:
   - {fileID: 0}
   level: 0.5
