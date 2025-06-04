@@ -7,7 +7,6 @@ using UnityEngine;
 public class LiquidVolumeAnimator : MonoBehaviour {
 
     public Mesh changeMesh;
-    public float yOffset = 0f;
 	// Use this for initialization
     //just incase we have multiple materials;
     [HideInInspector]
@@ -169,14 +168,18 @@ public class LiquidVolumeAnimator : MonoBehaviour {
 	    verts = m.vertices;
 	    minMaxBounds.x = minMaxBounds.y = verts[0].y;
         
-	    minMaxBounds.x = minMaxBounds.y = transform.TransformPoint(verts[0]).y;
-for (int i = 0; i < verts.Length; ++i)
-{
-    float y = transform.TransformPoint(verts[i]).y;
-    if (y > minMaxBounds.y) minMaxBounds.y = y;
-    if (y < minMaxBounds.x) minMaxBounds.x = y;
-}
-
+	    for (int i = 0; i < verts.Length; ++i)
+	    {
+            Vector3 wPos = transform.TransformDirection(verts[i]);
+            if (wPos.y > minMaxBounds.y)
+	        {
+	            minMaxBounds.y = wPos.y;
+	        }
+	        if (wPos.y < minMaxBounds.x)
+	        {
+	            minMaxBounds.x = wPos.y;
+	        }
+	    }
 	    minMaxBounds.x -= cPos.y;
 	    minMaxBounds.y -= cPos.y;
 	    for (int i = 0; i < mats.Length; ++i)
@@ -191,6 +194,8 @@ for (int i = 0; i < verts.Length; ++i)
             mf = GetComponent<MeshFilter>();
             mf.sharedMesh = changeMesh; // 메시 강제 설정
         }
+
+        
 	}
 	public void AddForce(Vector3 force)
     {
@@ -255,7 +260,7 @@ for (int i = 0; i < verts.Length; ++i)
         minMaxBounds.x -= cPos.y;
         //minMaxBounds.x += cPos.y;
         //minMaxBounds.y += cPos.y;
-        finalLevel = Mathf.Lerp(minMaxBounds.x, minMaxBounds.y, level) + yOffset;
+        finalLevel = Mathf.Lerp(minMaxBounds.x, minMaxBounds.y, level);
         if(level <= Single.Epsilon * 10)
         {
             //dont render (turn off renderer)
@@ -329,43 +334,5 @@ for (int i = 0; i < verts.Length; ++i)
         prvLevel = level;
         prevQ = transform.rotation;
 
-    }
-
-    public ParticleSystem pouringParticles;
-    public LiquidVolumeAnimator sourceBottle;
-    public LiquidVolumeAnimator targetBottle;
-    public float transferDuration = 2f;
-
-    private bool hasTransferred = false;
-
-    void Update()
-    {
-        if (!hasTransferred && pouringParticles.isPlaying)
-        {
-            hasTransferred = true;
-            StartCoroutine(TransferLiquid());
-        }
-    }
-
-    private IEnumerator TransferLiquid()
-    {
-        float elapsed = 0f;
-        float startSource = sourceBottle.level;
-        float startTarget = targetBottle.level;
-        float total = startSource;
-
-        while (elapsed < transferDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / transferDuration;
-
-            sourceBottle.level = Mathf.Lerp(startSource, 0, t);
-            targetBottle.level = Mathf.Lerp(startTarget, startTarget + total, t);
-
-            yield return null;
-        }
-
-        sourceBottle.level = 0;
-        targetBottle.level = startTarget + total;
     }
 }
