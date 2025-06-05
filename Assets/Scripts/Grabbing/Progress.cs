@@ -97,4 +97,40 @@ public class Progress : MonoBehaviour
         }
     }
 
+    private bool hasCheckedLiquidLevel = false;
+
+public void OnPourFinished()
+{
+    if (!hasCheckedLiquidLevel)
+    {
+        hasCheckedLiquidLevel = true;
+        StartCoroutine(CheckLiquidLevel());
+    }
+}
+
+IEnumerator CheckLiquidLevel()
+{
+    yield return new WaitForSeconds(1f);  // 액체 안정화 대기
+
+    var liquid = Progress1_Obj1.GetComponent<LiquidVolumeAnimator>();
+    if (liquid == null)
+    {
+        Debug.LogWarning("LiquidVolumeAnimator 컴포넌트를 찾을 수 없습니다.");
+        yield break;
+    }
+
+    float level = liquid.level;
+    if (Mathf.Abs(level - 0.5f) < 0.05f)  // 0.45~0.55 사이일 경우
+    {
+        ProgressBar.Instance.AddProgress(percent);
+        nowProcess = 2; // 다음 단계로
+        GetContent("1-2");
+    }
+    else
+    {
+        Debug.Log("레벨이 기준에 도달하지 않았습니다: " + level);
+    }
+}
+
+
 }
