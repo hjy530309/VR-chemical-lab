@@ -118,6 +118,28 @@ namespace Fusion.XR.Host.Grabbing
                 // Object released by this hand
                 Ungrab(grabbedObject);
             }
+
+            if (grabbedObject != null)
+            {
+                // 🌀 오브젝트 회전 입력 처리
+                float rotationSpeed = 100f * Time.deltaTime;
+    if (Input.GetKey(KeyCode.Alpha1))
+    {
+        // 왼쪽으로 Z축 회전 (반시계 방향)
+        grabbedObject.localRotationOffset = grabbedObject.localRotationOffset * Quaternion.Euler(0, 0, -rotationSpeed);
+    }
+    else if (Input.GetKey(KeyCode.Alpha2))
+    {
+        // 오른쪽으로 Z축 회전 (시계 방향)
+        grabbedObject.localRotationOffset = grabbedObject.localRotationOffset * Quaternion.Euler(0, 0, rotationSpeed);
+    }
+
+                // 오브젝트를 놓았는지 확인
+                if (!hand.isGrabbing)
+                {
+                    Ungrab(grabbedObject);
+                }
+            }
         }
 
         // Ask the grabbable object to start following the hand
