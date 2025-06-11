@@ -12400,10 +12400,9 @@ MonoBehaviour:
   Splat: {fileID: 1033381741606936, guid: c5cfb86d27d1c6d4fa7522b83540e4ca, type: 3}
   SplatMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   maxSplatDistance: 5
-  shatterAtImpulse: 3
-  shatterAtAcceleration: 50
+  shatterAtSpeed: 1
   allowShattering: 1
   onlyAllowShatterOnCollision: 1
   previousPos: {x: 0, y: 0, z: 0}
@@ -12762,7 +12761,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa316a3d12ddaa4e83caf66ca7e9804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  changeMesh: {fileID: 0}
   mats: []
   level: 0.521
   minMaxBounds: {x: 0, y: 0}
