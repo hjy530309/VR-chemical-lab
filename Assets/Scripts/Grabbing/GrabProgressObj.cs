@@ -49,27 +49,13 @@ public class GrabProgressObj : NetworkBehaviour
     {
         DebugLog($"{gameObject.name} ungrabbed");
         hasPickedUp = false;
-        if (gameObject.name == "torch")
-            {
-                TorchEffectController effectController = GetComponent<TorchEffectController>();
-                if (effectController != null)
-                {
-                    effectController.DisableEffect(); // 이펙트 끄기
-                }
-            }
     }
 
     void OnDidGrab(NetworkGrabber newGrabber)
     {
         DebugLog($"{gameObject.name} grabbed by {newGrabber.Object.InputAuthority} {newGrabber.hand.side} hand");
-        if (gameObject.name == "torch")
-            {
-                TorchEffectController effectController = GetComponent<TorchEffectController>();
-                if (effectController != null)
-                {
-                    effectController.EnableEffect(); // 이펙트 켜기
-                }
-            }
+        Debug.Log($"{transform.root.tag} tag from root");
+        Debug.Log($"{gameObject.tag} tag name");
         if (progressManager != null && hasPickedUp==false)
         {
             // Grab 된 이 게임오브젝트를 Progress에 전달해서 처리하게 함
@@ -80,6 +66,8 @@ public class GrabProgressObj : NetworkBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        DebugLog("충돌");
+
         GameObject taggedParent = FindTaggedParent(collision.gameObject, "ExperimentObj");
         if (taggedParent != null)
         {
