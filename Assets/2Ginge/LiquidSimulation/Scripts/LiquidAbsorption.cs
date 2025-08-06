@@ -41,11 +41,19 @@ public class LiquidAbsorption : MonoBehaviour {
         if (available)
         {
             currentColor = smashScript.color;
+            
             if (LVA.level < 1.0f - particleValue)
             {
 
                 //essentially, take the ratio of the bottle that has liquid (0 to 1), then see how much the level will change, then interpolate the color based on the dif.
-                Color impactColor = other.GetComponentInParent<BottleSmash>().color;
+                BottleSmash otherSmash = other.GetComponentInParent<BottleSmash>();
+                Color impactColor = Color.red; // 기본값
+
+                if (otherSmash != null)
+                {
+                    impactColor = otherSmash.color;
+                }
+
 
                 if (LVA.level <= float.Epsilon * 10)
                 {

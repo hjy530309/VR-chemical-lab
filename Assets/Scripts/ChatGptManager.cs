@@ -19,9 +19,19 @@ public OnResponseEvent OnResponse;
     public TextMeshProUGUI speechText;
     public GameObject speechBubble;
     public float hideDelay = 2f;
+    private bool initialized = false;
 
     public async void AskChatGPT(string newText)
     {
+        if (!initialized)
+        {
+            ChatMessage setup = new ChatMessage();
+            setup.Role = "system";
+            setup.Content = "너는 지금부터 화학 실험을 도와주는 실험 조수야. 사용자의 질문에 답하고, 특정한 행동을 하게 되면 그에 맞는 반응을 해줘.";
+            messages.Add(setup);
+            initialized = true;
+        }
+
         ChatMessage newMessage = new ChatMessage();
         newMessage.Content = newText;
         newMessage.Role = "user";
@@ -31,6 +41,8 @@ public OnResponseEvent OnResponse;
         speechBubble.SetActive(true);
 
         CreateChatCompletionRequest request = new CreateChatCompletionRequest();
+        request.Temperature = 0.7f;
+        request.MaxTokens = 200;
         request.Messages = messages;
         request.Model = "gpt-3.5-turbo";
 
@@ -61,26 +73,26 @@ public OnResponseEvent OnResponse;
 
     // 코루틴 함수: 텍스트를 하나씩 출력
     private IEnumerator TypeText(string text, int maxLineLength = 20)
-{
-    speechText.text = "";
-    int currentLineLength = 0;
-
-    foreach (char letter in text)
     {
-        speechText.text += letter;
-        currentLineLength++;
+        speechText.text = "";
+        int currentLineLength = 0;
 
-        // 최대 줄 길이를 넘기면 줄바꿈 추가
-        if (currentLineLength >= maxLineLength && letter == ' ')
+        foreach (char letter in text)
         {
-            speechText.text += "\n";
-            currentLineLength = 0;
-        }
+            speechText.text += letter;
+            currentLineLength++;
 
-        yield return new WaitForSeconds(0.1f);
+            // 최대 줄 길이를 넘기면 줄바꿈 추가
+            if (currentLineLength >= maxLineLength && letter == ' ')
+            {
+                speechText.text += "\n";
+                currentLineLength = 0;
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+        StartCoroutine(HideSpeechBubbleAfterDelay());
     }
-    StartCoroutine(HideSpeechBubbleAfterDelay());
-}
 
 
     private IEnumerator HideSpeechBubbleAfterDelay()

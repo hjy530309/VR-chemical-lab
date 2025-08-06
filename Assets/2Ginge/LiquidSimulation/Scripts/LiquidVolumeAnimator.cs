@@ -6,7 +6,6 @@ using UnityEngine;
 [System.Serializable]
 public class LiquidVolumeAnimator : MonoBehaviour {
 
-    public Mesh changeMesh;
 	// Use this for initialization
     //just incase we have multiple materials;
     [HideInInspector]
@@ -189,13 +188,6 @@ public class LiquidVolumeAnimator : MonoBehaviour {
 
 	    mr.materials = mats;
 
-        if (changeMesh != null)
-        {
-            mf = GetComponent<MeshFilter>();
-            mf.sharedMesh = changeMesh; // 메시 강제 설정
-        }
-
-        
 	}
 	public void AddForce(Vector3 force)
     {
