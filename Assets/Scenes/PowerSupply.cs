@@ -10,6 +10,10 @@ public class PowerSupply : MonoBehaviour
 
     private Renderer _renderer;
 
+    // ChecklistManager 참조 (씬에 있는 것)
+    [SerializeField] private ChecklistManager checklistManager;
+    [SerializeField] private int stepId =1; // DB 단계 ID
+
     private void Start()
     {
         if (switchVisual != null)
@@ -23,6 +27,12 @@ public class PowerSupply : MonoBehaviour
         IsPoweredOn = !IsPoweredOn;
         Debug.Log("전원 상태: " + (IsPoweredOn ? "ON" : "OFF"));
         UpdateVisual();
+
+        // 전원 켜졌을 때 체크리스트 완료
+        if (IsPoweredOn && checklistManager != null)
+        {
+            checklistManager.CompleteStep(stepId);
+        }
     }
 
     private void UpdateVisual()

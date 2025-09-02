@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using TMPro;
 
+
 public class MetalObject : NetworkBehaviour
 {
     public bool InElectrolyte = false;        // 전해질 안에 있는지 여부
@@ -22,6 +23,11 @@ public class MetalObject : NetworkBehaviour
     [SerializeField] private TMP_Text platingPercentageText;    // 도금률 표시
 
     private Material _materialInstance;
+
+
+    [SerializeField] private ChecklistManager checklistManager; // 씬에 있는 ChecklistManager
+    [SerializeField] private int stepId = 3; // DB에서 정의한 금속 도금 단계 ID
+    private bool stepCompleted = false; // 중복 호출 방지
 
     private void Start()
     {
@@ -89,6 +95,13 @@ public class MetalObject : NetworkBehaviour
 
             if (electricEffect != null)
                 electricEffect.DisableEffect();
+
+            // 체크리스트 완료 호출
+            if (!stepCompleted && checklistManager != null)
+            {
+                checklistManager.CompleteStep(stepId);
+                stepCompleted = true;
+            }
         }
 
         if (platingPercentageText != null)
