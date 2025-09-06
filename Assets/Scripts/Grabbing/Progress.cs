@@ -4,17 +4,9 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 
-public enum LiquidType {
-    None,
-    A,
-    B
-}
-
 public class Progress : MonoBehaviour
 {
-    public int nowProcess = 1;
-    public LiquidType requiredLiquid = LiquidType.A; // 이번 단계에 필요한 액체
-
+    int nowProcess = 1;
     public StepManager stepManager;
     public TMP_Text contentField;
     public GameObject nowObj;
@@ -22,7 +14,7 @@ public class Progress : MonoBehaviour
     public GameObject Progress1_Obj2;
     public GameObject Progress2_Obj1;
     public GameObject Progress2_Obj2;
-    public float percent;
+    private float percent;
 
     public void GetContent(string stepId)
     {
@@ -83,22 +75,14 @@ public class Progress : MonoBehaviour
     {
         switch (nowProcess)
         {
-            case 1000:
-                if ((nowObj == Progress1_Obj1 && item == Progress1_Obj2) || 
-                    (nowObj == Progress1_Obj2 && item == Progress1_Obj1))
+            case 1:
+                if ((nowObj == Progress1_Obj1 && item == Progress1_Obj2) || (nowObj == Progress1_Obj2 && item == Progress1_Obj1))
                 {
-                    // 자식의 자식에 있는 LiquidVolumeAnimator 가져오기
-                    LiquidVolumeAnimator target = item.GetComponentInChildren<LiquidVolumeAnimator>();
-
-                    if (target != null && Mathf.Approximately(target.level, 0.1f))
-                    {
-                        ProgressBar.Instance.AddProgress(percent);
-                        nowProcess++;
-                        GetContent("1-2");
-                    }
+                    ProgressBar.Instance.AddProgress(percent);
+                    nowProcess++;
+                    GetContent("1-2");
                 }
                 break;
-
 
             case 2:
                 if ((nowObj == Progress2_Obj1 && item == Progress2_Obj2) || (nowObj == Progress2_Obj2 && item == Progress2_Obj1))
@@ -110,39 +94,6 @@ public class Progress : MonoBehaviour
                 break;
 
             // 필요한 만큼 case 계속 추가 가능
-        }
-    }
-
-    public void OnLiquidTouch(LiquidType liquidType, GameObject targetObj)
-    {
-        // 올바른 액체인지 확인
-        if (liquidType != requiredLiquid)
-        {
-            Debug.Log("잘못된 액체가 들어옴!");
-            return; // 무시하거나, 실패 처리
-        }
-
-        switch (nowProcess)
-        {
-            case 1:
-                if (targetObj == Progress1_Obj2)
-                {
-                    ProgressBar.Instance.AddProgress(percent);
-                    nowProcess++;
-                    requiredLiquid = LiquidType.B; // 다음 단계에 B가 필요하다면 갱신
-                    GetContent("1-2");
-                }
-                break;
-
-            case 2:
-                if (targetObj == Progress2_Obj2)
-                {
-                    ProgressBar.Instance.AddProgress(percent);
-                    nowProcess++;
-                    requiredLiquid = LiquidType.None; // 필요 없으면 초기화
-                    GetContent("1-3");
-                }
-                break;
         }
     }
 

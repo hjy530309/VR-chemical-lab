@@ -39,8 +39,6 @@ namespace Fusion.XR.Host.Desktop
 
         Transform Head => rig == null ? null : rig.headset.transform;
 
-        private float handZOffset = 0f;
-
         private void Awake()
         {
             hardwareRigControl = GetComponentInParent<DesktopController>();
@@ -153,12 +151,6 @@ namespace Fusion.XR.Host.Desktop
                 {
                     grabbed = null;
                     grabberHand.isGrabbing = false;
-
-                    // 손을 원래 위치로 되돌리기
-                    handZOffset = 0f;
-
-                    // 손 회전 초기화
-                    rig.leftHand.transform.localRotation = defaultLeftHandRotation;
                 }
             }
         }
@@ -206,35 +198,23 @@ namespace Fusion.XR.Host.Desktop
                 if (Mouse.current.leftButton.isPressed || Mouse.current.leftButton.wasReleasedThisFrame)
                 {
                     rayBeamer.isRayEnabled = true;
-
                     if (targetSearched == false)
+                    {
                         target = SearchTarget(mouseRay);
+                    }
 
                     beamerRotationHandled = true;
-
-                    if (hoverListener != null) // 마우스가 어떤 타겟을 가리키는 경우
-                    {
-                        // 실제 레이 캐스트에 히트한 경우에만 회전
-                        if (Physics.Raycast(mouseRay, out RaycastHit hit, 40f))
-                        {
-                            var currentBeamLocalRotation = Quaternion.Inverse(beamerHand.transform.rotation) * rayBeamer.origin.rotation;
-                            var beamRotation = Quaternion.LookRotation(hit.point - rayBeamer.origin.position);
-                            beamerHand.transform.rotation = beamRotation * Quaternion.Inverse(currentBeamLocalRotation);
-                        }
-                        else
-                        {
-                            // 히트하지 않으면 손을 기본 회전으로
-                            beamerHand.transform.localRotation = defaultLeftHandRotation;
-                        }
-                    }
-                    else
-                    {
-                        // hoverListener가 없으면 기본 회전
-                        beamerHand.transform.localRotation = defaultLeftHandRotation;
-                    }
+                    var currentBeamLocalRotation = Quaternion.Inverse(beamerHand.transform.rotation) * rayBeamer.origin.rotation;
+                    var beamRotation = Quaternion.LookRotation(target - rayBeamer.origin.position);
+                    // Explanation:
+                    // We have: beamerHand.transform.rotation * currentBeamLocalRotation = rayBeamer.origin.rotation
+                    // We want: rayBeamer.origin.rotation = beamRotation;
+                    // So beamerHand.transform.rotation * currentBeamLocalRotation = beamRotation
+                    // So beamerHand.transform.rotation * currentBeamLocalRotation * Quaternion.Inverse(currentBeamLocalRotation) = beamRotation * Quaternion.Inverse(currentBeamLocalRotation)
+                    // So beamerHand.transform.rotation * Quaternion.Identity = beamRotation * Quaternion.Inverse(currentBeamLocalRotation). Simplified to:
+                    beamerHand.transform.rotation = beamRotation * Quaternion.Inverse(currentBeamLocalRotation);
                 }
             }
-
 
             rig.rightHand.transform.position = Head.TransformPoint(defaultRightHandPosition);
             rig.rightHand.transform.rotation = Head.rotation * defaultLeftHandRotation;
@@ -242,42 +222,17 @@ namespace Fusion.XR.Host.Desktop
             if (grabHandDistance != 0)
             {
                 grabberHandPositionHandled = true;
-                rig.leftHand.transform.position = mouseRay.origin + mouseRay.direction * (grabHandDistance + handZOffset);
+                rig.leftHand.transform.position = mouseRay.origin + mouseRay.direction * grabHandDistance;
             }
 
             if (!grabberHandPositionHandled)
-{
-    Vector3 handOffset = defaultLeftHandPosition;
-    Vector3 targetDir = (mouseRay.GetPoint(HAND_RANGE) - Head.position).normalized;
-    rig.leftHand.transform.position = Head.position + Head.rotation * handOffset + targetDir * HAND_RANGE;
-    rig.leftHand.transform.rotation = Quaternion.LookRotation(targetDir) * defaultLeftHandRotation;
-}
-
-            
-            if (grabberHand.isGrabbing)
             {
-                // 회전 처리
-                float rotationSpeed = 100f * Time.deltaTime;
-                if (Input.GetKey(KeyCode.Alpha1))
-                    rig.leftHand.transform.Rotate(0f, 0f, -rotationSpeed, Space.World);
-                else if (Input.GetKey(KeyCode.Alpha2))
-                    rig.leftHand.transform.Rotate(0f, 0f, rotationSpeed, Space.World);
-                            // 물건 회전 초기화
-                if (Input.GetKeyDown(KeyCode.Alpha3) && grabbed != null)
-                {
-                    Quaternion deltaRotation = Quaternion.Inverse(grabbed.transform.rotation);
-
-                    // 손도 같은 delta만큼 회전
-                    rig.leftHand.transform.rotation = deltaRotation * rig.leftHand.transform.rotation;
-                }
-
-                // 마우스 휠 이동 처리
-                float scroll = Mouse.current.scroll.ReadValue().y;
-                if (Mathf.Abs(scroll) > 0.01f)
-                {
-                    float moveSpeed = 0.003f;
-                    handZOffset += scroll * moveSpeed;
-                }
+                rig.leftHand.transform.position = Head.TransformPoint(defaultLeftHandPosition) + mouseRay.direction * HAND_RANGE;
+            }
+            if (!beamerRotationHandled)
+            {
+                rig.leftHand.transform.LookAt(mouseRay.origin + mouseRay.direction * 2f);
+                rig.leftHand.transform.Rotate(-40, 0, 0);
             }
         }
 
