@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class BottleSmash : MonoBehaviour {
 
+    public GameObject BottlePrefab; // 원래 병 Prefab
+    public float respawnDelay = 3f; // 몇 초 후 다시 만들지
+    public Transform respawnPoint;
+
 	// Use this for initialization
     //all of the required items in order to gie the impression of hte glass breaking.
     [ColorUsageAttribute(true, true, 0f, 8f, 0.125f, 3f)]
@@ -159,9 +163,24 @@ public float shatterAtAcceleration = 50.0f;  // 가속도 임계값
             newSplat.transform.position = info.point;
             
         }
+        //병 삭제
         Destroy(transform.gameObject, DespawnTime);
 
+        // 일정 시간 뒤 새 병 생성
+        StartCoroutine(RespawnBottle());
     }
+
+    private IEnumerator RespawnBottle()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+
+        Vector3 spawnPos = (respawnPoint != null) ? respawnPoint.position : transform.position;
+        Quaternion spawnRot = (respawnPoint != null) ? respawnPoint.rotation : transform.rotation;
+
+        // 현재 위치 + 회전에서 다시 생성
+        Instantiate(BottlePrefab, spawnPos, spawnRot);
+    }
+
 	// Update is called once per frame, for the change in velocity and all that jazz...
 	void FixedUpdate () {
         ChangedColor();

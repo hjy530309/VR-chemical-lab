@@ -118,55 +118,6 @@ namespace Fusion.XR.Host.Grabbing
                 // Object released by this hand
                 Ungrab(grabbedObject);
             }
-
-            if (grabbedObject != null)
-            {
-                // 🌀 오브젝트 회전 입력 처리
-                float rotationSpeed = 100f * Time.deltaTime;
-                if (Input.GetKey(KeyCode.Alpha1))
-                {
-                    // 왼쪽으로 Z축 회전 (반시계 방향)
-                    grabbedObject.localRotationOffset = grabbedObject.localRotationOffset * Quaternion.Euler(0, 0, -rotationSpeed);
-                }
-                else if (Input.GetKey(KeyCode.Alpha2))
-                {
-                    // 오른쪽으로 Z축 회전 (시계 방향)
-                    grabbedObject.localRotationOffset = grabbedObject.localRotationOffset * Quaternion.Euler(0, 0, rotationSpeed);
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-                    // Grabber 회전의 역을 적용해서 월드 기준 0,0,0으로 만듦
-                    Quaternion inverseHandRot = Quaternion.Inverse(transform.rotation);
-                    Quaternion additionalYRot = Quaternion.Euler(0, 145f, 0);
-
-                    grabbedObject.localRotationOffset = inverseHandRot * additionalYRot;
-                }
-
-                // 오브젝트를 놓았는지 확인
-                if (!hand.isGrabbing)
-                {
-                    Ungrab(grabbedObject);
-                }
-
-                float scroll = Input.GetAxis("Mouse ScrollWheel");
-                if (Mathf.Abs(scroll) > 0.01f)
-                    {
-                        float scrollSpeed = 2f;
-
-                        // 카메라 기준 앞 방향
-                        Vector3 camForward = Camera.main.transform.forward;
-
-                        // Y 성분 제거 → 수평 방향으로만
-                        camForward.y = 0;
-                        camForward.Normalize();
-
-                        // 사용자 기준 방향을 Grabber의 로컬 공간으로 변환
-                        Vector3 localForward = transform.InverseTransformDirection(camForward);
-
-                        // localPositionOffset 이동
-                        grabbedObject.localPositionOffset += localForward * scroll * scrollSpeed;
-                    }
-            }
         }
 
         // Ask the grabbable object to start following the hand
