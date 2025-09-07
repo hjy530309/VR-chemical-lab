@@ -16,6 +16,7 @@ public class LiquidVolumeAnimator : MonoBehaviour {
     [SerializeField]
     public float level = 0.5f;
     private float finalLevel;
+    private bool filling = false;
     
     //the current bound given a direction
     public Vector2 minMaxBounds;
@@ -196,6 +197,22 @@ public class LiquidVolumeAnimator : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate ()
 	{
+        //level이 낮으면 1로 천천히 올라감
+        if (!filling && level <= 0.03f)
+        {
+            filling = true; //한번 맞으면 애니메이션 시작
+        }
+
+        // 애니메이션 실행
+        if (filling && level <= 1f)
+        {
+            level = Mathf.MoveTowards(level, 1f, 0.5f * Time.deltaTime);
+            if (level >= 1f)
+            {
+                filling = false;
+            }
+        }
+    
         cPos = transform.position;
         float nLength = _anchorLength * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
         //prevTransformedPoint = transform.TransformDirection(Vector3.down);

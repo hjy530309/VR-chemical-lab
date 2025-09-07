@@ -126,12 +126,12 @@ namespace Fusion.XR.Host.Grabbing
                 if (Input.GetKey(KeyCode.Alpha1))
                 {
                     // 왼쪽으로 Z축 회전 (반시계 방향)
-                    grabbedObject.localRotationOffset = grabbedObject.localRotationOffset * Quaternion.Euler(0, 0, -rotationSpeed);
+                    grabbedObject.localRotationOffset = grabbedObject.localRotationOffset * Quaternion.Euler(-rotationSpeed, 0, -rotationSpeed);
                 }
                 else if (Input.GetKey(KeyCode.Alpha2))
                 {
                     // 오른쪽으로 Z축 회전 (시계 방향)
-                    grabbedObject.localRotationOffset = grabbedObject.localRotationOffset * Quaternion.Euler(0, 0, rotationSpeed);
+                    grabbedObject.localRotationOffset = grabbedObject.localRotationOffset * Quaternion.Euler(rotationSpeed, 0, rotationSpeed);
                 }
                 else if (Input.GetKeyDown(KeyCode.Alpha3))
                 {
