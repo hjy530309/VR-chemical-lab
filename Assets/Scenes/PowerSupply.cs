@@ -54,4 +54,13 @@ public class PowerSupply : MonoBehaviour
     {
         TogglePower();
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!IsPoweredOn) // 이미 켜졌으면 무시
+        {
+            Debug.Log("스위치에 무언가 닿음: " + other.name);
+            TogglePower();
+        }
+    }
 }

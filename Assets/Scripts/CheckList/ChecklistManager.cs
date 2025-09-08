@@ -9,22 +9,38 @@ public class ChecklistItem
     public int id;
     public string step_name;
     public bool is_done;
+    public int chapter_id;
 }
 
 public class ChecklistManager : MonoBehaviour
 {
     public RectTransform checklistParent;   // ScrollView Content
-    public GameObject checklistPrefab;  // Toggle+Text 프리팹
+    public GameObject checklistPrefab;      // Toggle+Text 프리팹
 
     private Dictionary<int, ChecklistUI> uiMap = new Dictionary<int, ChecklistUI>();
+    private int currentChapterId = 0;
 
     void Start()
     {
-        StartCoroutine(LoadChecklist());           // 처음 체크리스트 불러오기
-        InvokeRepeating(nameof(RefreshChecklist), 2f, 5f); // 5초마다 갱신
+        InvokeRepeating(nameof(RefreshChecklist), 2f, 5f);
     }
 
-    IEnumerator LoadChecklist()
+    public void LoadStepsForChapter(int chapterId)
+    {
+        Debug.Log($"체크리스트: 챕터 {chapterId} 단계 불러오기 요청");
+        currentChapterId = chapterId;
+
+        // 이전 UI 초기화
+        uiMap.Clear();
+        foreach (Transform child in checklistParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        StartCoroutine(LoadChecklist(chapterId));
+    }
+
+    IEnumerator LoadChecklist(int chapterId)
     {
         using (UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/checklist"))
         {
@@ -37,31 +53,41 @@ public class ChecklistManager : MonoBehaviour
             else
             {
                 string json = www.downloadHandler.text;
-                ChecklistItem[] items = JsonHelper.FromJson<ChecklistItem>(json);
+                ChecklistItem[] items = JsonHelper.FromJsonArray<ChecklistItem>(json);
+
+                // 진행 중 단계 계산 (이전 단계가 완료되면 현재 단계 진행 중)
+                int maxDoneId = 0;
+                foreach (var doneItem in items)
+                {
+                    if (doneItem.is_done && doneItem.id > maxDoneId)
+                        maxDoneId = doneItem.id;
+                }
 
                 foreach (var item in items)
                 {
+                    bool inProgress = (item.id == maxDoneId + 1);
+
                     if (!uiMap.ContainsKey(item.id))
                     {
                         // Prefab 생성
                         GameObject obj = Instantiate(checklistPrefab, checklistParent);
+                        obj.transform.localScale = Vector3.one;
 
-                        // RectTransform 자동 조정 (Content 폭에 맞춤)
-                        RectTransform rt = obj.GetComponent<RectTransform>();
-                        rt.localScale = Vector3.one;
-                        rt.sizeDelta = new Vector2(checklistParent.rect.width, rt.sizeDelta.y);
-                        rt.anchoredPosition = new Vector2(0, 0);
+                        //RectTransform rt = obj.GetComponent<RectTransform>();
+                        //rt.localScale = Vector3.one;
+                        //rt.sizeDelta = new Vector2(checklistParent.rect.width, rt.sizeDelta.y);
+                        //rt.anchoredPosition = new Vector2(0, 0);
 
-
-                        // UI 세팅
-                        var ui = obj.GetComponent<ChecklistUI>();
-                        ui.Setup(item.step_name, item.is_done);
+                        ChecklistUI ui = obj.GetComponent<ChecklistUI>();
+                        ui.Setup(item.step_name, item.is_done, inProgress);
 
                         uiMap[item.id] = ui;
                     }
                     else
                     {
-                        uiMap[item.id].SetChecked(item.is_done);
+                        var ui = uiMap[item.id];
+                        // 글씨, 토글, 색상 모두 갱신
+                        ui.Setup(item.step_name, item.is_done, inProgress);
                     }
                 }
             }
@@ -70,13 +96,12 @@ public class ChecklistManager : MonoBehaviour
 
     void RefreshChecklist()
     {
-        StartCoroutine(LoadChecklist());
+        StartCoroutine(LoadChecklist(currentChapterId));
     }
 
-    // 체크 완료 시 API 호출
     public void CompleteStep(int id)
     {
-        Debug.Log($"ChecklistManager: 단계 완료 호출됨 (ID: {id})"); // 🔹 로그 추가
+        Debug.Log($"ChecklistManager: 단계 완료 호출됨 (ID: {id})");
         StartCoroutine(CompleteStepAPI(id));
     }
 
@@ -89,7 +114,7 @@ public class ChecklistManager : MonoBehaviour
             if (www.result == UnityWebRequest.Result.Success)
             {
                 Debug.Log("단계 완료: " + id);
-                StartCoroutine(LoadChecklist()); // 완료 후 UI 갱신
+                StartCoroutine(LoadChecklist(currentChapterId)); // 현재 챕터 갱신
             }
             else
             {
@@ -99,19 +124,3 @@ public class ChecklistManager : MonoBehaviour
     }
 }
 
-// JSON 배열 파싱 유틸
-public static class JsonHelper
-{
-    public static T[] FromJson<T>(string json)
-    {
-        string newJson = "{ \"array\": " + json + "}";
-        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
-        return wrapper.array;
-    }
-
-    [System.Serializable]
-    private class Wrapper<T>
-    {
-        public T[] array;
-    }
-}
