@@ -9,6 +9,7 @@ TagManager:
   - ExperimentObj
   - Liquid
   - FireParticle
+  - Powder
   layers:
   - Default
   - TransparentFX

@@ -4,7 +4,7 @@ public class PowderTiltEmission : MonoBehaviour
 {
     public ParticleSystem powderParticles;
     public Transform bottleTransform;  // 병 게임오브젝트 트랜스폼
-
+    public GameObject spoon;
     private ParticleSystem.EmissionModule emission;
 
     public float tiltThreshold = 30f; // 몇 도 이상 기울이면 입자 나옴
@@ -16,18 +16,27 @@ public class PowderTiltEmission : MonoBehaviour
     }
 
     void Update()
-{
-    Vector3 upDirection = bottleTransform.up;
-    float dot = Vector3.Dot(upDirection, Vector3.up);  // 1이면 위, -1이면 아래
-
-    if (dot < Mathf.Cos(tiltThreshold * Mathf.Deg2Rad))
     {
-        emission.rateOverTime = 500f;
-    }
-    else
-    {
-        emission.rateOverTime = 0f;
-    }
-}
+        if (spoon == null) return;
+        SpoonManager spoonMgr = spoon.GetComponent<SpoonManager>();
+        if (powderParticles.particleCount > 100)
+        {
+            spoonMgr.powder.SetActive(false);
+            emission.rateOverTime = 0f;
+        }
+        if (spoonMgr != null && spoonMgr.powder.activeSelf){
+            Vector3 localUp = bottleTransform.localRotation * Vector3.up;
 
+            float dot = Vector3.Dot(localUp, Vector3.up);  // 1이면 위, -1이면 아래
+
+            if (dot < Mathf.Cos(tiltThreshold * Mathf.Deg2Rad))
+            {
+                emission.rateOverTime = 500f;
+            }
+            else
+            {
+                emission.rateOverTime = 0f;
+            }
+        }
+    }
 }

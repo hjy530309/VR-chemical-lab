@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BottleSmash : MonoBehaviour {
 
-    public GameObject BottlePrefab; // 원래 병 Prefab
     public float respawnDelay = 3f; // 몇 초 후 다시 만들지
     public Transform respawnPoint;
 
@@ -111,48 +110,18 @@ public float shatterAtAcceleration = 50.0f;  // 가속도 임계값
     {
         
         broken = true;
-        //the Corks collider needs to be turned on;
-        if (Cork != null)
-        {
-            Cork.transform.parent = null;
-            Cork.GetComponent<Collider>().enabled = true;
-            Cork.GetComponent<Rigidbody>().isKinematic = false;
-            Destroy(Cork.gameObject, DespawnTime);
-        }
-        //the Liquid gets removed after n seconds
-        if (Liquid != null)
-        {
-            float t = 0.0f;
-            //if (Effect != null)
-            //    t = (Effect.main.startLifetime.constantMin + Effect.main.startLifetime.constantMax)/2;
-            Destroy(Liquid.gameObject, t);
-        }
-        //particle effect
-        if(Effect != null)
-        {
-            Effect.Play();
-            Destroy(Effect.gameObject, Effect.main.startLifetime.constantMax);
-        }
-
-        //now the label;
-        if (Label != null)
-        {
-            //Label.transform.parent = null;
-            //Label.GetComponent<Collider>().enabled = true;
-            //Label.GetComponent<Rigidbody>().isKinematic = false;
-            Destroy(Label.gameObject);
-        }
-        //turn Glass off and the shattered on.
         if (Glass != null)
         {
-            Destroy(Glass.gameObject);
+            Glass.SetActive(false);
+            Liquid.SetActive(false);
         }
+
         if (Glass_Shattered != null)
         {
             Glass_Shattered.SetActive(true);
-            Glass_Shattered.transform.parent = null;
-            Destroy(Glass_Shattered, DespawnTime);
         }
+        Effect.Play();
+        //the Corks collider needs to be turned on;
 
         //instantiate the splat.
         RaycastHit info = new RaycastHit();
@@ -163,22 +132,23 @@ public float shatterAtAcceleration = 50.0f;  // 가속도 임계값
             newSplat.transform.position = info.point;
             
         }
-        //병 삭제
-        Destroy(transform.gameObject, DespawnTime);
 
-        // 일정 시간 뒤 새 병 생성
         StartCoroutine(RespawnBottle());
     }
 
     private IEnumerator RespawnBottle()
     {
         yield return new WaitForSeconds(respawnDelay);
+        
+        if (respawnPoint != null)
+            transform.position = respawnPoint.position;
+        transform.rotation = Quaternion.identity;
 
-        Vector3 spawnPos = (respawnPoint != null) ? respawnPoint.position : transform.position;
-        Quaternion spawnRot = (respawnPoint != null) ? respawnPoint.rotation : transform.rotation;
+        Glass.SetActive(true);
+        Liquid.SetActive(true);
+        Glass_Shattered.SetActive(false);
 
-        // 현재 위치 + 회전에서 다시 생성
-        Instantiate(BottlePrefab, spawnPos, spawnRot);
+        broken = false;
     }
     
 	// Update is called once per frame, for the change in velocity and all that jazz...

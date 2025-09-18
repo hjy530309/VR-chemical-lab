@@ -10,8 +10,9 @@ public class GrabProgressObj : NetworkBehaviour
 {
     public TextMeshProUGUI authorityText;
     public TextMeshProUGUI debugText;
-    public Progress progressManager;
+    public ExperimentProgress progressManager;
     bool hasPickedUp = false;
+    public GameObject nowObj;
 
     private void Awake()
     {
@@ -60,25 +61,22 @@ public class GrabProgressObj : NetworkBehaviour
         {
             // Grab 된 이 게임오브젝트를 Progress에 전달해서 처리하게 함
             progressManager.OnPickUp(this.gameObject);
+            nowObj = this.gameObject;
             hasPickedUp = true;
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        DebugLog("충돌");
 
         GameObject taggedParent = FindTaggedParent(collision.gameObject, "ExperimentObj");
         if (taggedParent != null)
         {
-            DebugLog(taggedParent.tag);
-
             if (taggedParent.CompareTag("ExperimentObj"))
             {
-                DebugLog($"{taggedParent.name}");
                 if (progressManager != null)
                 {
-                    progressManager.OnTouch(taggedParent.gameObject);
+                    progressManager.OnTouch(taggedParent.gameObject, nowObj);
                 }
             }
         }

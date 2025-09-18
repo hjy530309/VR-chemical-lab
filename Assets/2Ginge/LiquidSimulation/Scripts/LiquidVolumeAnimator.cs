@@ -15,6 +15,7 @@ public class LiquidVolumeAnimator : MonoBehaviour {
     [Range(0,1)]
     [SerializeField]
     public float level = 0.5f;
+    public bool refill = true;
     private float finalLevel;
     private bool filling = false;
     
@@ -197,10 +198,12 @@ public class LiquidVolumeAnimator : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate ()
 	{
-        //level이 낮으면 1로 천천히 올라감
-        if (!filling && level <= 0.03f)
-        {
-            filling = true; //한번 맞으면 애니메이션 시작
+        if(refill == true){
+            //level이 낮으면 1로 천천히 올라감
+            if (!filling && level <= 0.03f)
+            {
+                filling = true; //한번 맞으면 애니메이션 시작
+            }
         }
 
         // 애니메이션 실행

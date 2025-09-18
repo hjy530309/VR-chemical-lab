@@ -3,9 +3,6 @@ using UnityEngine;
 using Fusion.XR.Host.Rig;
 using Fusion.XR.Host.Grabbing;
 using Fusion.XR.Host.Locomotion;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using System.Collections.Generic;
 
 namespace Fusion.XR.Host.Desktop
 {
@@ -36,12 +33,13 @@ namespace Fusion.XR.Host.Desktop
         
         public IMouseTeleportHover hoverListener;
 
-        public float HAND_RANGE = 0.7f;
+        public const float HAND_RANGE = 0.7f;
 
         float grabHandDistance = 0;
 
         Transform Head => rig == null ? null : rig.headset.transform;
-        public InputActionReference triggerAction;
+
+        private float handZOffset = 0f;
 
         private void Awake()
         {
@@ -155,6 +153,12 @@ namespace Fusion.XR.Host.Desktop
                 {
                     grabbed = null;
                     grabberHand.isGrabbing = false;
+
+                    // 손을 원래 위치로 되돌리기
+                    handZOffset = 0f;
+
+                    // 손 회전 초기화
+                    rig.leftHand.transform.localRotation = defaultLeftHandRotation;
                 }
             }
         }
@@ -174,75 +178,12 @@ namespace Fusion.XR.Host.Desktop
             return target;
         }
 
-        public bool CheckUIInteractionWithRay(Ray vrRay)
-        {
-            if (EventSystem.current == null) return false;
-
-            GraphicRaycaster[] raycasters = GameObject.FindObjectsOfType<GraphicRaycaster>();
-            bool didHit = false;
-
-            foreach (var gr in raycasters)
-            {
-                Canvas canvas = gr.GetComponent<Canvas>();
-                if (canvas == null) continue;
-
-                Camera uiCamera = canvas.worldCamera;
-                if (uiCamera == null) continue;
-
-                // Ray가 Canvas와 교차하는 지점 찾기
-                if (Physics.Raycast(vrRay, out RaycastHit hit, 100f))
-                {
-                    // PointerEventData 생성
-                    PointerEventData pointerData = new PointerEventData(EventSystem.current);
-                    pointerData.pointerId = -1; // VR Ray용 ID
-
-                    // Ray가 맞은 지점을 UI카메라 기준 ScreenPoint로 변환
-                    pointerData.position = uiCamera.WorldToScreenPoint(hit.point);
-
-                    List<RaycastResult> results = new List<RaycastResult>();
-                    gr.Raycast(pointerData, results);
-
-                    foreach (var result in results)
-                    {
-                        didHit = true;
-
-                        bool vrTriggerPressed = triggerAction.action.WasPressedThisFrame();
-
-                        if (Mouse.current.leftButton.wasPressedThisFrame || vrTriggerPressed)
-                        {
-                            ExecuteEvents.Execute(result.gameObject, pointerData, ExecuteEvents.pointerClickHandler);
-                        }
-
-                    }
-                }
-            }
-
-            return didHit;
-        }
-
-
         void Update()
         {
             rayBeamer.isRayEnabled = false;
             var mouseRay = mouseCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            Ray vrRay = new Ray(rayBeamer.origin.position, rayBeamer.origin.forward);
-
-            // UI Ray 체크 및 클릭 시뮬레이션 (PointerEventData를 VR Ray 기준으로 처리)
-            bool didUIHit = CheckUIInteractionWithRay(vrRay);
-
-            // 손과 RayBeamer 항상 업데이트
-            UpdateHandAndRay(mouseRay, vrRay, didUIHit);
-
-            float scroll = Mouse.current.scroll.ReadValue().y; // 위로 스크롤: +, 아래로: -
-            if (scroll != 0 && grabbed != null) // 물건을 잡고 있을 때만
-            {
-                float sensitivity = 0.02f; // 변화량을 줄여서 조금씩 움직이게 함
-                float delta = scroll * sensitivity;
-
-                grabHandDistance += delta;
-                grabHandDistance = Mathf.Max(0.1f, grabHandDistance);
-            }
-
+            // Storing the distance before checking ungrab, as we want to reset the hand position at ungrab during the next Update
+            //  so that the grabbing system has the time to drop it where it is
             if (grabbed == null) grabHandDistance = 0;
 
             // Check if the mouse hit a grabbable object
@@ -265,23 +206,35 @@ namespace Fusion.XR.Host.Desktop
                 if (Mouse.current.leftButton.isPressed || Mouse.current.leftButton.wasReleasedThisFrame)
                 {
                     rayBeamer.isRayEnabled = true;
+
                     if (targetSearched == false)
-                    {
                         target = SearchTarget(mouseRay);
-                    }
 
                     beamerRotationHandled = true;
-                    var currentBeamLocalRotation = Quaternion.Inverse(beamerHand.transform.rotation) * rayBeamer.origin.rotation;
-                    var beamRotation = Quaternion.LookRotation(target - rayBeamer.origin.position);
-                    // Explanation:
-                    // We have: beamerHand.transform.rotation * currentBeamLocalRotation = rayBeamer.origin.rotation
-                    // We want: rayBeamer.origin.rotation = beamRotation;
-                    // So beamerHand.transform.rotation * currentBeamLocalRotation = beamRotation
-                    // So beamerHand.transform.rotation * currentBeamLocalRotation * Quaternion.Inverse(currentBeamLocalRotation) = beamRotation * Quaternion.Inverse(currentBeamLocalRotation)
-                    // So beamerHand.transform.rotation * Quaternion.Identity = beamRotation * Quaternion.Inverse(currentBeamLocalRotation). Simplified to:
-                    beamerHand.transform.rotation = beamRotation * Quaternion.Inverse(currentBeamLocalRotation);
+
+                    if (hoverListener != null) // 마우스가 어떤 타겟을 가리키는 경우
+                    {
+                        // 실제 레이 캐스트에 히트한 경우에만 회전
+                        if (Physics.Raycast(mouseRay, out RaycastHit hit, 40f))
+                        {
+                            var currentBeamLocalRotation = Quaternion.Inverse(beamerHand.transform.rotation) * rayBeamer.origin.rotation;
+                            var beamRotation = Quaternion.LookRotation(hit.point - rayBeamer.origin.position);
+                            beamerHand.transform.rotation = beamRotation * Quaternion.Inverse(currentBeamLocalRotation);
+                        }
+                        else
+                        {
+                            // 히트하지 않으면 손을 기본 회전으로
+                            beamerHand.transform.localRotation = defaultLeftHandRotation;
+                        }
+                    }
+                    else
+                    {
+                        // hoverListener가 없으면 기본 회전
+                        beamerHand.transform.localRotation = defaultLeftHandRotation;
+                    }
                 }
             }
+
 
             rig.rightHand.transform.position = Head.TransformPoint(defaultRightHandPosition);
             rig.rightHand.transform.rotation = Head.rotation * defaultLeftHandRotation;
@@ -289,43 +242,44 @@ namespace Fusion.XR.Host.Desktop
             if (grabHandDistance != 0)
             {
                 grabberHandPositionHandled = true;
-                rig.leftHand.transform.position = mouseRay.origin + mouseRay.direction * grabHandDistance;
+                rig.leftHand.transform.position = mouseRay.origin + mouseRay.direction * (grabHandDistance + handZOffset);
             }
 
             if (!grabberHandPositionHandled)
             {
-                rig.leftHand.transform.position = Head.TransformPoint(defaultLeftHandPosition) + mouseRay.direction * HAND_RANGE;
+                Vector3 handOffset = defaultLeftHandPosition;
+                Vector3 targetDir = (mouseRay.GetPoint(HAND_RANGE) - Head.position).normalized;
+                rig.leftHand.transform.position = Head.position + Head.rotation * handOffset + targetDir * HAND_RANGE;
+                rig.leftHand.transform.rotation = Quaternion.LookRotation(targetDir) * defaultLeftHandRotation;
             }
-            if (!beamerRotationHandled)
+
+            
+            if (grabberHand.isGrabbing)
             {
-                rig.leftHand.transform.LookAt(mouseRay.origin + mouseRay.direction * 2f);
-                rig.leftHand.transform.Rotate(-40, 0, 0);
+                // 회전 처리
+                float rotationSpeed = 100f * Time.deltaTime;
+                if (Input.GetKey(KeyCode.Alpha1))
+                    rig.leftHand.transform.Rotate(rotationSpeed, 0f, 0f, Space.World);
+                else if (Input.GetKey(KeyCode.Alpha2))
+                    rig.leftHand.transform.Rotate(-rotationSpeed, 0f, 0f, Space.World);
+                            // 물건 회전 초기화
+                if (Input.GetKeyDown(KeyCode.Alpha3) && grabbed != null)
+                {
+                    Quaternion deltaRotation = Quaternion.Inverse(grabbed.transform.rotation);
+
+                    // 손도 같은 delta만큼 회전
+                    rig.leftHand.transform.rotation = deltaRotation * rig.leftHand.transform.rotation;
+                }
+
+                // 마우스 휠 이동 처리
+                float scroll = Mouse.current.scroll.ReadValue().y;
+                if (Mathf.Abs(scroll) > 0.01f)
+                {
+                    float moveSpeed = 0.001f;
+                    handZOffset += scroll * moveSpeed;
+                }
             }
         }
-
-        void UpdateHandAndRay(Ray mouseRay, Ray vrRay, bool didUIHit)
-        {
-            // UI 위에서도 항상 손 위치/회전 업데이트
-            rig.rightHand.transform.position = Head.TransformPoint(defaultRightHandPosition);
-            rig.rightHand.transform.rotation = Head.rotation * defaultLeftHandRotation;
-
-            if (grabHandDistance != 0)
-            {
-                rig.leftHand.transform.position = mouseRay.origin + mouseRay.direction * grabHandDistance;
-            }
-            else
-            {
-                rig.leftHand.transform.position = Head.TransformPoint(defaultLeftHandPosition) + mouseRay.direction * HAND_RANGE;
-            }
-
-            // RayBeamer 방향 처리
-            if (!didUIHit)
-            {
-                rig.leftHand.transform.LookAt(mouseRay.origin + mouseRay.direction * 2f);
-                rig.leftHand.transform.Rotate(-40, 0, 0);
-            }
-        }
-
 
     }
 
