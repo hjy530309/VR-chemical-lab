@@ -52476,10 +52476,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 266617234983744302, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: SortKey
-      value: 2383174433
-      objectReference: {fileID: 0}
     - target: {fileID: 341531534878939269, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
       propertyPath: mf
       value: 
@@ -52528,10 +52524,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 489654274108300168, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: bottleSmash
-      value: 
-      objectReference: {fileID: 991853489}
     - target: {fileID: 563943542573469607, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
       propertyPath: mf
       value: 
@@ -52552,14 +52544,6 @@ PrefabInstance:
       propertyPath: bottleSmash
       value: 
       objectReference: {fileID: 991853489}
-    - target: {fileID: 1411368251680335484, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: SortKey
-      value: 3649137122
-      objectReference: {fileID: 0}
-    - target: {fileID: 1467725474019183155, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: SortKey
-      value: 2830775482
-      objectReference: {fileID: 0}
     - target: {fileID: 1694413279257165820, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
       propertyPath: smashScript
       value: 
@@ -52568,14 +52552,6 @@ PrefabInstance:
       propertyPath: bottleSmash
       value: 
       objectReference: {fileID: 991853489}
-    - target: {fileID: 1962686488951940622, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: mf
-      value: 
-      objectReference: {fileID: 2133360853}
-    - target: {fileID: 1962686488951940622, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: mr
-      value: 
-      objectReference: {fileID: 2133360852}
     - target: {fileID: 2364960977627266977, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
       propertyPath: CollisionModule.m_Planes.Array.data[0]
       value: 
@@ -52596,38 +52572,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Elephant's Toothpaste
       objectReference: {fileID: 0}
-    - target: {fileID: 3495624225029425724, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: bottleSmash
-      value: 
-      objectReference: {fileID: 991853489}
-    - target: {fileID: 3744916845418674423, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: SortKey
-      value: 2903013602
-      objectReference: {fileID: 0}
-    - target: {fileID: 3924085196238426658, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: smashScript
-      value: 
-      objectReference: {fileID: 991853489}
-    - target: {fileID: 4692147294859413230, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: SortKey
-      value: 3416772206
-      objectReference: {fileID: 0}
-    - target: {fileID: 5174318970944502390, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: smashScript
-      value: 
-      objectReference: {fileID: 991853489}
-    - target: {fileID: 5445843276299875010, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: bottleSmash
-      value: 
-      objectReference: {fileID: 991853489}
     - target: {fileID: 6500320924228754240, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
       propertyPath: bottleSmash
       value: 
       objectReference: {fileID: 991853489}
-    - target: {fileID: 6705840321986132811, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      propertyPath: SortKey
-      value: 1174394446
-      objectReference: {fileID: 0}
     - target: {fileID: 6857224424178099393, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
       propertyPath: bottleSmash
       value: 
@@ -52667,25 +52615,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4692147294859413218, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 6705840321986132807, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      insertIndex: 6
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 1467725474019183167, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      insertIndex: 6
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 1411368251680335472, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      insertIndex: 6
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 266617234983744290, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      insertIndex: 6
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 3744916845418674427, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
-      insertIndex: 6
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02af205e418fc6f40b5ba948a082af52, type: 3}
 --- !u!1001 &8969200747512257027
 PrefabInstance:

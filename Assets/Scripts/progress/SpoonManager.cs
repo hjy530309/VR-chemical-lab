@@ -26,4 +26,9 @@ public class SpoonManager : MonoBehaviour
         powder.SetActive(true);
         hasPowder = true;
     }
+
+    public void InactivePowder()
+    {
+        powder.SetActive(false);
+    }
 }

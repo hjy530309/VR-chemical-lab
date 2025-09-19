@@ -13,18 +13,15 @@ public class PowderTiltEmission : MonoBehaviour
     {
         emission = powderParticles.emission;
         emission.rateOverTime = 0f;  // 시작할 때 입자 없음
+        powderParticles.Stop();
     }
 
     void Update()
     {
         if (spoon == null) return;
-        SpoonManager spoonMgr = spoon.GetComponent<SpoonManager>();
-        if (powderParticles.particleCount > 100)
-        {
-            spoonMgr.powder.SetActive(false);
-            emission.rateOverTime = 0f;
-        }
+            SpoonManager spoonMgr = spoon.GetComponent<SpoonManager>();
         if (spoonMgr != null && spoonMgr.powder.activeSelf){
+            powderParticles.Play();
             Vector3 localUp = bottleTransform.localRotation * Vector3.up;
 
             float dot = Vector3.Dot(localUp, Vector3.up);  // 1이면 위, -1이면 아래

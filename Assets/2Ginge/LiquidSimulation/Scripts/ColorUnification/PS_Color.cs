@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PS_Color : ColorBase {
 
     // Use this for initialization
+    public bool customize = false;
     public BottleSmash bottleSmash;
     private ParticleSystem ps;
     void Start ()
@@ -14,7 +16,8 @@ public class PS_Color : ColorBase {
         {
             bottleSmash = GetComponentInParent<BottleSmash>();
         }
-        RegisterWithController();
+        if(!customize)
+            RegisterWithController();
     }
     protected override void RegisterWithController()
     {

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LiquidShooter : MonoBehaviour
 {
+    [SerializeField]
+    private SpoonManager spoonMgr;
     void OnParticleCollision(GameObject other)
     {
         ExperimentProgress progress = FindObjectOfType<ExperimentProgress>();
@@ -41,8 +43,15 @@ public class LiquidShooter : MonoBehaviour
             {
                 progress.OnLiquidTouch(targetObj, sourceObj);
             }
-            else
+            else if(targetObj != null && targetObj.name == "Erlenmeyer_flask" && !isLiquid)
             {
+                ParticleSystem ps = this.GetComponent<ParticleSystem>();
+
+                ParticleSystem.EmissionModule emission = ps.emission;
+                emission.rateOverTime = 0f; // 끄기
+                spoonMgr.InactivePowder();
+
+                ps.Stop();
                 progress.OnPowderTouch(targetObj, sourceObj);
             }
         }
