@@ -11,8 +11,11 @@ public class GrabProgressObj : NetworkBehaviour
     public TextMeshProUGUI authorityText;
     public TextMeshProUGUI debugText;
     public ExperimentProgress progressManager;
+    private ThermitExperimentProgress thermitProgress;
     bool hasPickedUp = false;
     public GameObject nowObj;
+
+    private TorchEffectController torchEffect;
 
     private void Awake()
     {
@@ -48,21 +51,52 @@ public class GrabProgressObj : NetworkBehaviour
 
     void OnDidUngrab()
     {
+        if(this.gameObject.name == "Torch")
+        {
+            torchEffect.DisableEffect();
+        }
         DebugLog($"{gameObject.name} ungrabbed");
         hasPickedUp = false;
     }
 
     void OnDidGrab(NetworkGrabber newGrabber)
     {
+        if(this.gameObject.name == "Torch")
+        {
+            torchEffect = this.gameObject.GetComponent<TorchEffectController>();
+            if(torchEffect != null)
+            {
+                torchEffect.EnableEffect(); // 파티클 실행
+            }
+        }
         DebugLog($"{gameObject.name} grabbed by {newGrabber.Object.InputAuthority} {newGrabber.hand.side} hand");
         Debug.Log($"{transform.root.tag} tag from root");
         Debug.Log($"{gameObject.tag} tag name");
+        progressManager = FindObjectOfType<ExperimentProgress>();
+        thermitProgress = FindObjectOfType<ThermitExperimentProgress>();
+        
         if (progressManager != null && hasPickedUp==false)
         {
-            // Grab 된 이 게임오브젝트를 Progress에 전달해서 처리하게 함
-            progressManager.OnPickUp(this.gameObject);
-            nowObj = this.gameObject;
-            hasPickedUp = true;
+            GameObject obj1 = progressManager.gameObject;
+            if(obj1.activeInHierarchy)
+            {
+                // Grab 된 이 게임오브젝트를 Progress에 전달해서 처리하게 함
+                progressManager.OnPickUp(this.gameObject);
+                nowObj = this.gameObject;
+                hasPickedUp = true;
+            }
+        }
+        if (thermitProgress != null && hasPickedUp==false)
+        {
+            GameObject obj2 = thermitProgress.gameObject;
+            Debug.Log("obj2.activeInHierarchy = "+obj2.activeInHierarchy);
+            if(obj2.activeInHierarchy)
+            {
+                // Grab 된 이 게임오브젝트를 Progress에 전달해서 처리하게 함
+                thermitProgress.OnPickUp(this.gameObject);
+                nowObj = this.gameObject;
+                hasPickedUp = true;
+            }
         }
     }
 
@@ -77,6 +111,10 @@ public class GrabProgressObj : NetworkBehaviour
                 if (progressManager != null)
                 {
                     progressManager.OnTouch(taggedParent.gameObject, nowObj);
+                }
+                if (thermitProgress != null)
+                {
+                    thermitProgress.OnTouch(taggedParent.gameObject, nowObj);
                 }
             }
         }

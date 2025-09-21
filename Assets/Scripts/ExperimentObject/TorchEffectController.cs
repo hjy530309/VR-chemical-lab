@@ -6,6 +6,10 @@ public class TorchEffectController : MonoBehaviour
 {
     public GameObject fireEffect; // Inspector에서 FX 파티클 연결
 
+    void Start()
+    {
+        DisableEffect();
+    }
     public void DisableEffect()
     {
         if (fireEffect != null)

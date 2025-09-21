@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PowderTiltEmission : MonoBehaviour
+public class ThermitPowderTiltEmissionSpoon : MonoBehaviour
 {
     public ParticleSystem powderParticles;
     public Transform bottleTransform;  // 병 게임오브젝트 트랜스폼
@@ -19,7 +19,7 @@ public class PowderTiltEmission : MonoBehaviour
     void Update()
     {
         if (spoon == null) return;
-            SpoonManager spoonMgr = spoon.GetComponent<SpoonManager>();
+            ThermitSpoonManager spoonMgr = spoon.GetComponent<ThermitSpoonManager>();
         if (spoonMgr != null && spoonMgr.powder.activeSelf){
             powderParticles.Play();
             Vector3 localUp = bottleTransform.localRotation * Vector3.up;
