@@ -8,11 +8,15 @@ public class ThermitPlateManager : MonoBehaviour
     public GameObject ribbon;
     public GameObject plateRibbon;
     public ParticleSystem fireParticle;
+    public ParticleSystem explosionParticle;
+    public GameObject explosion;
     public float scaleStep = 0.0002f; // 호출할 때마다 얼마나 늘릴지
     public float maxScaleObj1 = 0.1f;
     public float maxScaleObj2 = 0.03f;
     private float obj1Scale = 0f;
     private float obj2Scale  = 0f;
+
+    public float duration = 5f;   // 내려가는 시간
 
     void Start()
     {
@@ -20,6 +24,7 @@ public class ThermitPlateManager : MonoBehaviour
         powder.transform.localScale = Vector3.zero;
         StopFire();
         HidePlateRibbon();
+        StopExplosion();
     }
 
     public void PlayFire()
@@ -29,6 +34,16 @@ public class ThermitPlateManager : MonoBehaviour
     public void StopFire()
     {
         fireParticle.Stop();
+    }
+    public void PlayExplosion()
+    {
+        explosion.SetActive(true);
+        explosionParticle.Play();
+    }
+    public void StopExplosion()
+    {
+        explosion.SetActive(false);
+        explosionParticle.Stop();
     }
     public void ActivePowder()
     {
@@ -84,4 +99,19 @@ public class ThermitPlateManager : MonoBehaviour
     {
         plateRibbon.SetActive(false);
     }
+
+    public IEnumerator MoveFireCoroutine(System.Action onComplete = null)
+    {
+        PlayFire();
+        yield return new WaitForSeconds(5f);
+
+        StopFire();
+        PlayExplosion();
+        yield return new WaitForSeconds(2f);
+        StopExplosion();
+
+        onComplete?.Invoke();
+    }
+
+
 }
