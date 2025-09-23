@@ -19,17 +19,33 @@ public class ThermitExperimentProgress : MonoBehaviour
     public GameObject Progress3_Obj1;
     public GameObject Progress3_Obj2;
 
+    public GameObject result1;
+    public GameObject result2;
+    public GameObject result3;
+    public GameObject magnet;
+
     public float shakeSensitivity = 1f; // 흔들림 감도
     private Vector3 lastPosition;
+    private bool notCall = true;
 
     void Start()
     {
+        result1.SetActive(false);
+        result2.SetActive(false);
+        result3.SetActive(false);
+        
         if (Progress2_Obj2 != null)
             lastPosition = Progress2_Obj2.transform.position;
     }
 
     void Update()
     {
+        if(nowProcess == 1)
+        {
+            result1.SetActive(false);
+            result2.SetActive(false);
+            result3.SetActive(false);
+        }
         // ------------------ 흔들림 감지 ------------------
         if(nowProcess == 2)
         {
@@ -48,6 +64,15 @@ public class ThermitExperimentProgress : MonoBehaviour
             }
 
             lastPosition = currentPosition;
+        }
+        if(nowProcess == 6)
+        {
+            plateMgr.HidePlateRibbon();
+            plateMgr.InactivePowder();
+            result1.SetActive(true);
+            result2.SetActive(true);
+            result3.SetActive(true);
+            plateMgr.StopExplosion();
         }
     }
     public void OnPowderTouch(GameObject targetObj, GameObject sourceObj)
@@ -129,6 +154,29 @@ public class ThermitExperimentProgress : MonoBehaviour
         if((sourceObj.name == "Spoon") && (targetObj.name == "Powder") || (sourceObj.name == "Powder") && (targetObj.name == "Spoon"))
         {
             spoonMgr.ActivePowder();
+        }
+    }
+
+    public void OnFireTouch(GameObject targetObj, GameObject sourceObj)
+    {
+        switch (nowProcess)
+        {
+            case 5:
+                {
+                    if(targetObj.name =="Plate")
+                    {
+                        StartCoroutine(plateMgr.MoveFireCoroutine(() =>
+                        {
+                            if(notCall){
+                                nowProcess++;
+                                notCall = false;
+                            }
+                        }));
+
+                    }
+                    
+                }
+                break;
         }
     }
 
