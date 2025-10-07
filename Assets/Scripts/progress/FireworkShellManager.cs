@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FireworkShellManager : MonoBehaviour
 {
+    public FireworkProgress progress;
     public GameObject gunpowder;
     public GameObject sawdustpowder;
     public GameObject star;
@@ -156,5 +157,6 @@ public class FireworkShellManager : MonoBehaviour
         heartRenderer.material.color = color;
         circleRenderer.material.color = color;
         particleModifier.ChangeMiddleColor(color);
+        progress.CheckChangeColor();
     }
 }

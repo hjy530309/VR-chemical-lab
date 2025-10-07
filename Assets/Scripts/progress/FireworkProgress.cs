@@ -5,10 +5,16 @@ using UnityEngine;
 
 public class FireworkProgress : MonoBehaviour
 {
+    [SerializeField] private ChecklistManager checklistManager;
+    [SerializeField] private int stepId =1;
+
     public int nowProcess = 1;
     public GameObject roof;
     public FireworkScoopManager scoopMgr;
     public FireworkShellManager shellMgr;
+    public BatteryManager batteryMgr1;
+    public BatteryManager batteryMgr2;
+    public BatteryManager batteryMgr3;
     public GameObject glue1;
     public GameObject glue2;
 
@@ -42,7 +48,6 @@ public class FireworkProgress : MonoBehaviour
 
     public float shakeSensitivity = 1f; // 흔들림 감도
     private Vector3 lastPosition;
-    public bool settingReady = false;
     private bool isFirst = true;
 
     void Start()
@@ -78,21 +83,12 @@ public class FireworkProgress : MonoBehaviour
                     case 3: shellMgr.InactiveCircle(); CircleGem.SetActive(true); break;
                 }
                 nowProcess = 2;
+                checklistManager.UndoStep(stepId-1);
+                stepId--;
             }
 
             lastPosition = currentPosition;
         }
-        if ((nowProcess == 10 || nowProcess == 9) && settingReady == true)
-        {
-            Progress9_Obj1.transform.localPosition = new Vector3(0f, -0.52f, -4.5f);
-            Progress9_Obj1.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-            if(isFirst)
-            {
-                isFirst = false;
-                nowProcess++;
-            }
-        }
-
     }
 
     public void OnPowderTouch(GameObject targetObj, GameObject sourceObj)
@@ -105,14 +101,13 @@ public class FireworkProgress : MonoBehaviour
                 {
                     shellMgr.IncreasePowderScale1();
                     if(shellMgr.totalScale >= 0.065f)
+                    {
                         nowProcess++;
+                        checklistManager.CompleteStep(stepId);
+                        stepId++;
+                    }
                 }
                 break;
-            }
-            case 3:
-            {
-                if(shellMgr.starColor != Color.white) nowProcess++;
-                    break;
             }
 
             case 4:
@@ -121,7 +116,11 @@ public class FireworkProgress : MonoBehaviour
                 {
                     shellMgr.IncreasePowderScale2();
                     if(shellMgr.totalScale >= 0.16f)
+                    {
                         nowProcess++;
+                        checklistManager.CompleteStep(stepId);
+                        stepId++;
+                    }
                 }
                 break;
             }
@@ -152,6 +151,8 @@ public class FireworkProgress : MonoBehaviour
                     }
 
                     nowProcess++;
+                    checklistManager.CompleteStep(stepId);
+                    stepId++;
                 }
                 break;
             case 5:
@@ -161,6 +162,8 @@ public class FireworkProgress : MonoBehaviour
                     shellMgr.ActiveWick();
                     Progress5_Obj3.SetActive(true);
                     nowProcess++;
+                    checklistManager.CompleteStep(stepId);
+                    stepId++;
                 }
                 break;
             case 7:
@@ -170,6 +173,8 @@ public class FireworkProgress : MonoBehaviour
                     Progress6_Obj2.SetActive(false);
                     FireworkSphere.SetActive(true);
                     nowProcess++;
+                    checklistManager.CompleteStep(stepId);
+                    stepId++;
                 }
                 break;
             case 8:
@@ -178,21 +183,10 @@ public class FireworkProgress : MonoBehaviour
                     FireworkSphere.SetActive(false);
                     FireworkProduct.SetActive(true);
                     nowProcess++;
+                    checklistManager.CompleteStep(stepId);
+                    stepId++;
                 }
                 break;
-            case 10:
-                if(sourceObj == Progress10_Obj1 && targetObj == Progress10_Obj2)
-                {
-                    float distance = Vector3.Distance(sourceObj.transform.position, targetObj.transform.position);
-                    if(distance < 0.5f)
-                    {   
-                        settingReady = false;
-                        StartCoroutine(rocket.StartRocket());
-                    }
-                        
-                }
-                break;
-
         }
 
         if((sourceObj.name == "Scoop") && (targetObj.name == "GunpowderBox") || (sourceObj.name == "GunpowderBox") && (targetObj.name == "Scoop"))
@@ -221,6 +215,8 @@ public class FireworkProgress : MonoBehaviour
                         glue2.SetActive(true);
                     }
                     nowProcess++;
+                    checklistManager.CompleteStep(stepId);
+                    stepId++;
                 }
                 break;
         }
@@ -228,6 +224,50 @@ public class FireworkProgress : MonoBehaviour
 
     public void OnFireTouch(GameObject targetObj, GameObject sourceObj)
     {
+        switch(nowProcess)
+        {
+            case 10:
+                if(sourceObj == Progress10_Obj1 && targetObj == Progress10_Obj2)
+                {
+                    float distance = Vector3.Distance(sourceObj.transform.position, targetObj.transform.position);
+                    if(distance < 1f)
+                    {
+                        StartCoroutine(rocket.StartRocket());
+                        checklistManager.CompleteStep(stepId);
+                        stepId++;
+                    }
+                }
+                break;
+        }
+
+        if(sourceObj == Progress10_Obj1 && (targetObj.name == "Battery1" || targetObj.name == "Battery2" || targetObj.name == "Battery3"))
+        {
+            float distance = Vector3.Distance(sourceObj.transform.position, targetObj.transform.position);
+            if(distance < 1f)
+            {   
+                switch(targetObj.name)
+                {
+                    case "Battery1": batteryMgr1.StartRocketBattery(); break;
+                    case "Battery2": batteryMgr2.StartRocketBattery(); break;
+                    case "Battery3": batteryMgr3.StartRocketBattery(); break;
+                }
+            }
+        }
+    }
+
+    public void rocketReady()
+    {
+        if ((nowProcess == 9))
+        {
+            if(isFirst)
+            {
+                rocket.ShowRocket();
+                isFirst = false;
+                nowProcess++;
+                checklistManager.CompleteStep(stepId);
+                stepId++;
+            }
+        }
     }
 
     public void OnPickUp(GameObject item)
@@ -236,6 +276,12 @@ public class FireworkProgress : MonoBehaviour
         {
             TorchParticle.Play();
         }
+        switch(item.name)
+        {
+            case "Battery1": batteryMgr1.StopRocketBattery(); break;
+            case "Battery2": batteryMgr2.StopRocketBattery(); break;
+            case "Battery3": batteryMgr3.StopRocketBattery(); break;
+        }
     }
 
     public void DropOff(GameObject item)
@@ -243,6 +289,16 @@ public class FireworkProgress : MonoBehaviour
         if(item.name == "FireworkTorch")
         {
             TorchParticle.Stop();
+        }
+    }
+
+    public void CheckChangeColor()
+    {
+        if(nowProcess == 3 && shellMgr.starColor != Color.white)
+        {
+            nowProcess++;
+            checklistManager.CompleteStep(stepId);
+            stepId++;
         }
     }
 }

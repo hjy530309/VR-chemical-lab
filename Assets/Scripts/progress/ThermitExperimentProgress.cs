@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ThermitExperimentProgress : MonoBehaviour
 {
+    [SerializeField] private ChecklistManager checklistManager;
+    [SerializeField] private int stepId =1;
+    
     public int nowProcess = 1;
     public ThermitSpoonManager spoonMgr;
     public ThermitPlateManager plateMgr;
@@ -61,6 +64,8 @@ public class ThermitExperimentProgress : MonoBehaviour
                 PowderColor.ChangePowderColor(new Color(140f/255f,68f/255f,32f/255f), Color.white);
                 PowderColor.SetSplit(1f);
                 nowProcess++;
+                checklistManager.CompleteStep(stepId);
+                stepId++;
             }
 
             lastPosition = currentPosition;
@@ -73,6 +78,8 @@ public class ThermitExperimentProgress : MonoBehaviour
             result2.SetActive(true);
             result3.SetActive(true);
             plateMgr.StopExplosion();
+            checklistManager.CompleteStep(stepId);
+            stepId++;
         }
     }
     public void OnPowderTouch(GameObject targetObj, GameObject sourceObj)
@@ -113,6 +120,8 @@ public class ThermitExperimentProgress : MonoBehaviour
                         if (Mathf.Abs(actualRatio - 0.3f) <= 0.2f) // 오차 ±0.2 허용
                         {
                             nowProcess++;
+                            checklistManager.CompleteStep(stepId);
+                            stepId++;
                         }
                     }
                 }
@@ -125,6 +134,8 @@ public class ThermitExperimentProgress : MonoBehaviour
                 {
                     PowderColor.SetSplit(0.8f);
                     nowProcess++;
+                    checklistManager.CompleteStep(stepId);
+                    stepId++;
                 }
                 break;
             }
@@ -146,6 +157,8 @@ public class ThermitExperimentProgress : MonoBehaviour
                     plateMgr.ShowPlateRibbon();
                     plateMgr.HideRibbon();
                     nowProcess++;
+                    checklistManager.CompleteStep(stepId);
+                    stepId++;
                 }
                 break;
 
@@ -170,6 +183,8 @@ public class ThermitExperimentProgress : MonoBehaviour
                             if(notCall){
                                 nowProcess++;
                                 notCall = false;
+                                checklistManager.CompleteStep(stepId);
+                                stepId++;
                             }
                         }));
 

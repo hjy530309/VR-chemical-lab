@@ -122,5 +122,30 @@ public class ChecklistManager : MonoBehaviour
             }
         }
     }
+
+    public void UndoStep(int id)
+    {
+        Debug.Log($"ChecklistManager: 단계 되돌리기 호출됨 (ID: {id})");
+        StartCoroutine(UndoStepAPI(id));
+    }
+
+    IEnumerator UndoStepAPI(int id)
+    {
+        using (UnityWebRequest www = UnityWebRequest.PostWwwForm("http://localhost:3000/checklist/undo/" + id, ""))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("단계 되돌리기 성공: " + id);
+                StartCoroutine(LoadChecklist(currentChapterId)); // 현재 챕터 갱신
+            }
+            else
+            {
+                Debug.LogError("단계 되돌리기 실패: " + www.error);
+            }
+        }
+    }
+
 }
 

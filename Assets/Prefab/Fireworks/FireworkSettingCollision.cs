@@ -7,9 +7,9 @@ public class FireworkSettingCollision : MonoBehaviour
     {
         GameObject taggedParent = FindTaggedParent(other.gameObject, "ExperimentObj");
 
-        if(taggedParent.gameObject.name == "rocket")
+        if(taggedParent != null && taggedParent.gameObject.name == "rocket")
         {
-            progress.settingReady = true;
+            progress.rocketReady();
         }
     }
 

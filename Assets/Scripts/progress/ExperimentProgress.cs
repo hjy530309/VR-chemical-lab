@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ExperimentProgress : MonoBehaviour
 {
+    [SerializeField] private ChecklistManager checklistManager;
+    [SerializeField] private int stepId =1;
+
     public int nowProcess = 1;
     int prevProcess = 1;
     public bool prevSuccess = true;
@@ -59,6 +62,8 @@ public class ExperimentProgress : MonoBehaviour
         {
             BubbleParticles.Play();
             nowProcess++;
+            checklistManager.CompleteStep(stepId);
+            stepId++;
         }
 
         // ------------------ 흔들림 감지 ------------------
@@ -75,6 +80,8 @@ public class ExperimentProgress : MonoBehaviour
                 mpb.SetColor("_GradientBottomColor", shakeColor);
                 targetRenderer.SetPropertyBlock(mpb);
                 nowProcess++;
+                checklistManager.CompleteStep(stepId);
+                stepId++;
             }
 
             lastPosition = currentPosition;
@@ -100,6 +107,8 @@ public class ExperimentProgress : MonoBehaviour
                         main.startColor = smashParticleColor1;
 
                         nowProcess++;
+                        checklistManager.CompleteStep(stepId);
+                        stepId++;
                     }
 
                 }
@@ -123,6 +132,8 @@ public class ExperimentProgress : MonoBehaviour
                         main.startColor = smashParticleColor2;
 
                         nowProcess++;
+                        checklistManager.CompleteStep(stepId);
+                        stepId++;
                     }
                 }
                 break;
@@ -146,6 +157,8 @@ public class ExperimentProgress : MonoBehaviour
                     if (sourceObj == Progress3_Obj1 || targetObj == Progress3_Obj2)
                     {
                         nowProcess++;
+                        checklistManager.CompleteStep(stepId);
+                        stepId++;
                     }
                 }
             break;
