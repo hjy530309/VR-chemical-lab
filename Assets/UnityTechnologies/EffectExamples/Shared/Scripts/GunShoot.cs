@@ -4,6 +4,8 @@ using Random = UnityEngine.Random;
 
 public class GunShoot : MonoBehaviour {
 
+	public GameObject elementH;
+
 	public float fireRate = 0.25f;										// Number in seconds which controls how often the player can fire
 	public float weaponRange = 20f;										// Distance in Unity units over which the player can fire
 
@@ -63,10 +65,12 @@ public class GunShoot : MonoBehaviour {
 					break;
 				case  "Stone":
 					SpawnDecal(hit, stoneHitEffect);
+					SpawnWithCameraForce(hit, elementH);
 					break;
 				case "WaterFilled":
 					SpawnDecal(hit, waterLeakEffect);
 					SpawnDecal(hit, metalHitEffect);
+					SpawnWithCameraForce(hit, elementH);
 					break;
 				case "Wood":
 					SpawnDecal(hit, woodHitEffect);
@@ -90,4 +94,28 @@ public class GunShoot : MonoBehaviour {
 		GameObject spawnedDecal = GameObject.Instantiate(prefab, hit.point, Quaternion.LookRotation(hit.normal));
 		spawnedDecal.transform.SetParent(hit.collider.transform);
 	}
+
+	void SpawnWithCameraForce(RaycastHit hit, GameObject prefab, bool applyCameraForce = false, float forceStrength = 5f)
+	{
+		// ① 오브젝트 생성
+		GameObject spawned = Instantiate(prefab, hit.point, Quaternion.LookRotation(hit.normal));
+
+		// ② 충돌 오브젝트 자식으로 붙이기 (선택)
+		spawned.transform.SetParent(hit.collider.transform);
+
+		// ③ Rigidbody 가져오기
+		Rigidbody rb = spawned.GetComponent<Rigidbody>();
+		if (rb != null && applyCameraForce)
+		{
+			// 카메라 방향 계산
+			Vector3 dir = (Camera.main.transform.position - hit.point).normalized;
+
+			// 힘 적용
+			rb.AddForce(-dir * forceStrength, ForceMode.Impulse);
+
+			// 선택 사항: 살짝 회전 추가
+			rb.AddTorque(Random.insideUnitSphere * 2f, ForceMode.Impulse);
+		}
+	}
+
 }
