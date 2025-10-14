@@ -46,16 +46,16 @@ namespace Fusion.XR.Host.Desktop
 
                 forwardAction.action.Enable();
             }
-            if (rotationAction != null && rotationAction.action != null)
-            {
-                if (rotationAction.reference == null && rotationAction.action.bindings.Count == 0)
-                {
-                    rotationAction.action.AddCompositeBinding("Axis")
-                        .With("Positive", "<Keyboard>/e")
-                        .With("Negative", "<Keyboard>/q");
-                }
-                rotationAction.action.Enable();
-            }
+            // if (rotationAction != null && rotationAction.action != null)
+            // {
+            //     if (rotationAction.reference == null && rotationAction.action.bindings.Count == 0)
+            //     {
+            //         rotationAction.action.AddCompositeBinding("Axis")
+            //             .With("Positive", "<Keyboard>/e")
+            //             .With("Negative", "<Keyboard>/q");
+            //     }
+            //     rotationAction.action.Enable();
+            // }
             rig = GetComponentInParent<HardwareRig>();
         }
 
@@ -71,10 +71,10 @@ namespace Fusion.XR.Host.Desktop
             if (forwardAction != null && forwardAction.action != null)
             {
                 var command = forwardAction.action.ReadValue<Vector2>();
-                if ((Mouse.current.rightButton.isPressed && Mouse.current.leftButton.isPressed))
-                {
-                    command = new Vector2(command.x, 1);
-                }
+                // if ((Mouse.current.rightButton.isPressed && Mouse.current.leftButton.isPressed))
+                // {
+                //     command = new Vector2(command.x, 1);
+                // }
                 if (command.magnitude == 0) return;
                 var headsetMove = command.y * forwardSpeed * Time.deltaTime * rig.headset.transform.forward + command.x * strafeSpeed * Time.deltaTime * rig.headset.transform.right;
                 var move = new Vector3(headsetMove.x, groundYPosition - rig.transform.position.y, headsetMove.z);

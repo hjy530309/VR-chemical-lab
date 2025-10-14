@@ -13,6 +13,7 @@ public class GrabProgressObj : NetworkBehaviour
     public ExperimentProgress progressManager;
     private ThermitExperimentProgress thermitProgress;
     private FireworkProgress fireworkProgress;
+    public PlanetExperimentProgress planetProgress;
     bool hasPickedUp = false;
     public GameObject nowObj;
 
@@ -83,6 +84,7 @@ public class GrabProgressObj : NetworkBehaviour
         progressManager = FindObjectOfType<ExperimentProgress>();
         thermitProgress = FindObjectOfType<ThermitExperimentProgress>();
         fireworkProgress = FindObjectOfType<FireworkProgress>();
+        planetProgress = FindObjectOfType<PlanetExperimentProgress>();
         
         if (progressManager != null && hasPickedUp==false)
         {
@@ -117,11 +119,21 @@ public class GrabProgressObj : NetworkBehaviour
                 hasPickedUp = true;
             }
         }
+        if (planetProgress != null && hasPickedUp==false)
+        {
+            GameObject obj3 = planetProgress.gameObject;
+            if(obj3.activeInHierarchy)
+            {
+                // Grab 된 이 게임오브젝트를 Progress에 전달해서 처리하게 함
+                planetProgress.OnPickUp(this.gameObject);
+                nowObj = this.gameObject;
+                hasPickedUp = true;
+            }
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-
         GameObject taggedParent = FindTaggedParent(collision.gameObject, "ExperimentObj");
         if (taggedParent != null)
         {
@@ -138,6 +150,10 @@ public class GrabProgressObj : NetworkBehaviour
                 if (fireworkProgress != null)
                 {
                     fireworkProgress.OnTouch(taggedParent.gameObject, nowObj);
+                }
+                if (planetProgress != null)
+                {
+                    planetProgress.OnTouch(taggedParent.gameObject, nowObj);
                 }
             }
         }

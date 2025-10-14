@@ -31,9 +31,15 @@ public class GunAim:MonoBehaviour
 		}
 
 		if (!isOutOfBounds)
-		{
-			transform.LookAt(parentCamera.ScreenToWorldPoint (new Vector3(mouseX, mouseY, 5.0f)));
-		}
+        {
+            // 🔸 마우스의 화면 좌표를 카메라 기준 3D 방향 벡터로 변환
+            Ray ray = parentCamera.ScreenPointToRay(new Vector3(mouseX, mouseY, 0f));
+            
+            // 🔸 총이 카메라 앞쪽 일정 거리(예: 5m) 위치를 보도록 설정
+            Vector3 targetPos = ray.origin + ray.direction * 5f;
+
+            transform.LookAt(targetPos);
+        }
 	}
 
 	public bool GetIsOutOfBounds()

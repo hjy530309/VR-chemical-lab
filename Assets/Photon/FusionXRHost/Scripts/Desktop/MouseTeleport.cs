@@ -18,6 +18,7 @@ namespace Fusion.XR.Host.Desktop
      */
     public class MouseTeleport : MonoBehaviour
     {
+        public GameObject weaponObject;
         public HardwareRig rig;
         public Camera mouseCamera;
         public Vector3 defaultLeftHandPosition;
@@ -40,6 +41,7 @@ namespace Fusion.XR.Host.Desktop
         Transform Head => rig == null ? null : rig.headset.transform;
 
         private float handZOffset = 0f;
+        private Quaternion previousCameraRotation;
 
         private void Awake()
         {
@@ -56,6 +58,7 @@ namespace Fusion.XR.Host.Desktop
 
         void Start()
         {
+            previousCameraRotation = mouseCamera.transform.rotation;
             if (forceFirstPersonView)
             {
                 mouseCamera.transform.position = Head.position;
@@ -279,6 +282,19 @@ namespace Fusion.XR.Host.Desktop
                     handZOffset += scroll * moveSpeed;
                 }
             }
+
+            if (grabbed == null && Mouse.current.rightButton.isPressed)
+            {
+                Quaternion cameraDelta = mouseCamera.transform.rotation * Quaternion.Inverse(previousCameraRotation);
+    
+                // 기존 총에 회전 delta 적용
+                weaponObject.transform.rotation = cameraDelta * weaponObject.transform.rotation;
+                
+                // 이전 카메라 회전 갱신
+                previousCameraRotation = mouseCamera.transform.rotation;
+
+            }
+
         }
 
     }
