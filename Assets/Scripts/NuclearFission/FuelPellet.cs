@@ -56,8 +56,8 @@ public class FuelPellet : MonoBehaviour
             Rigidbody nRb = n.GetComponent<Rigidbody>();
 
             // Control Rod 속도 적용
-            float speedMultiplier = controlRod != null ? controlRod.controlLevel : 1f;
-            nRb.velocity = Random.onUnitSphere * neutronSpeed * speedMultiplier;
+            //float speedMultiplier = controlRod != null ? controlRod.controlLevel : 1f;
+            //nRb.velocity = Random.onUnitSphere * neutronSpeed * speedMultiplier;
 
             // Rigidbody 세팅
             nRb.useGravity = false;

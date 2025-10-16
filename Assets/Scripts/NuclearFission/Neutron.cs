@@ -19,11 +19,11 @@ public class Neutron : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-        float initialSpeed = speed;
+/*        float initialSpeed = speed;
         if (controlRod != null)
-            initialSpeed *= controlRod.controlLevel;
+            initialSpeed *= controlRod.controlLevel;*/
 
-        rb.velocity = Random.onUnitSphere * initialSpeed;
+        //rb.velocity = Random.onUnitSphere * initialSpeed;
         NeutronManager.Instance.RegisterNeutron(this);
 
         StartCoroutine(EnableCollisionAfterDelay(0.05f));
@@ -75,5 +75,10 @@ public class Neutron : MonoBehaviour
     {
         NeutronManager.Instance.UnregisterNeutron(this);
         Destroy(gameObject);
+    }
+
+    public void ModifySpeed(float multiplier)
+    {
+        rb.velocity = rb.velocity.normalized * speed * multiplier;
     }
 }

@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/PlayerPrefab.unity
     guid: cf33471e31e74814883b49dac22b6465
+  - enabled: 1
+    path: Assets/Scenes/Planet.unity
+    guid: e736e9ce6a0b820428d05b8b7821c7da
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 98db4494e02496d4381f4a27bb856de2, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: c7e448ecdbccc9b41ae535b5b55c699a, type: 2}

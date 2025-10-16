@@ -19,32 +19,32 @@ public class NeutronManager : MonoBehaviour
 
     void Update()
     {
-        float slowdown = controlRod != null ? controlRod.controlLevel : 0f;
-        float speedMultiplier = Mathf.Lerp(1f, 0.1f, slowdown); // 속도 10%~100% 적용
+        //float slowdown = controlRod != null ? controlRod.controlLevel : 0f;
+        //float speedMultiplier = Mathf.Lerp(1f, 0.1f, slowdown); // 속도 10%~100% 적용
 
         // 역순 순회 + 안전 처리
-        for (int i = neutrons.Count - 1; i >= 0; i--)
-        {
-            Neutron n = neutrons[i];
-            if (n == null)
-            {
-                neutrons.RemoveAt(i);
-                continue;
-            }
+        //for (int i = neutrons.Count - 1; i >= 0; i--)
+        //{
+        //    Neutron n = neutrons[i];
+        //    if (n == null)
+        //    {
+        //        neutrons.RemoveAt(i);
+        //        continue;
+        //    }
 
-            Rigidbody rb = n.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.velocity = rb.velocity.normalized * initialSpeed * speedMultiplier;
+        //    Rigidbody rb = n.GetComponent<Rigidbody>();
+        //    if (rb != null)
+        //    {
+        //        rb.velocity = rb.velocity.normalized * initialSpeed * speedMultiplier;
 
-                // 시각적 체감: 속도에 따라 색상 변경
-                Renderer rend = n.GetComponent<Renderer>();
-                if (rend != null)
-                {
-                    rend.material.color = Color.Lerp(Color.red, Color.yellow, speedMultiplier);
-                }
-            }
-        }
+        //        // 시각적 체감: 속도에 따라 색상 변경
+        //        Renderer rend = n.GetComponent<Renderer>();
+        //        if (rend != null)
+        //        {
+        //            rend.material.color = Color.Lerp(Color.red, Color.yellow, speedMultiplier);
+        //        }
+        //    }
+        //}
     }
 
     public void RegisterNeutron(Neutron n)
@@ -76,12 +76,20 @@ public class NeutronManager : MonoBehaviour
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-            float speedMultiplier = controlRod != null ? Mathf.Lerp(1f, 0.1f, controlRod.controlLevel) : 1f;
-            rb.velocity = Random.onUnitSphere * initialSpeed * speedMultiplier;
+            //float speedMultiplier = controlRod != null ? Mathf.Lerp(1f, 0.1f, controlRod.controlLevel) : 1f;
+            //rb.velocity = Random.onUnitSphere * initialSpeed * speedMultiplier;
         }
 
         Neutron neutronScript = n.GetComponent<Neutron>();
         if (neutronScript != null)
             RegisterNeutron(neutronScript);
+    }
+
+    // 외부에서 중성자 리스트 가져오기
+    public List<Neutron> GetNeutrons()
+    {
+        // 안전하게 null 제거
+        neutrons.RemoveAll(n => n == null);
+        return neutrons;
     }
 }

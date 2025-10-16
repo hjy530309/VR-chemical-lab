@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI; // ← UI 전환용
 
 [System.Serializable]
 public class ChecklistItem
@@ -14,15 +15,26 @@ public class ChecklistItem
 
 public class ChecklistManager : MonoBehaviour
 {
+    [Header("Checklist UI")]
     public RectTransform checklistParent;   // ScrollView Content
     public GameObject checklistPrefab;      // Toggle+Text 프리팹
+
+    [Header("UI Panels")]
+    public GameObject checklistPanel;       // 현재 체크리스트 패널
+    public GameObject chapterSelectPanel;   // 챕터 선택 패널
+    public Button backButton;               // "돌아가기" 버튼
 
     private Dictionary<int, ChecklistUI> uiMap = new Dictionary<int, ChecklistUI>();
     private int currentChapterId = 0;
 
     void Start()
     {
+        // 주기적으로 갱신
         InvokeRepeating(nameof(RefreshChecklist), 2f, 5f);
+
+        // 돌아가기 버튼 연결
+        if (backButton != null)
+            backButton.onClick.AddListener(ReturnToChapterSelect);
     }
 
     public void LoadStepsForChapter(int chapterId)
@@ -30,74 +42,93 @@ public class ChecklistManager : MonoBehaviour
         Debug.Log($"체크리스트: 챕터 {chapterId} 단계 불러오기 요청");
         currentChapterId = chapterId;
 
-        // 이전 UI 초기화
         uiMap.Clear();
         foreach (Transform child in checklistParent)
-        {
             Destroy(child.gameObject);
-        }
 
         StartCoroutine(LoadChecklist(chapterId));
     }
 
     IEnumerator LoadChecklist(int chapterId)
     {
-        using (UnityWebRequest www = UnityWebRequest.Get("http://localhost:3000/checklist"))
+        using (UnityWebRequest www = UnityWebRequest.Get($"http://localhost:3000/checklist/{chapterId}"))
         {
             yield return www.SendWebRequest();
 
-            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+            if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("API 요청 실패: " + www.error);
+                yield break;
             }
-            else
+
+            string json = www.downloadHandler.text;
+            ChecklistItem[] allItems = JsonHelper.FromJsonArray<ChecklistItem>(json);
+
+            // ✅ 현재 챕터만 필터링
+            List<ChecklistItem> items = new List<ChecklistItem>();
+            foreach (var item in allItems)
             {
-                string json = www.downloadHandler.text;
-                ChecklistItem[] items = JsonHelper.FromJsonArray<ChecklistItem>(json);
+                if (item.chapter_id == chapterId)
+                    items.Add(item);
+            }
 
-                // 진행 중 단계 계산 (이전 단계가 완료되면 현재 단계 진행 중)
-                int maxDoneId = 0;
-                foreach (var doneItem in items)
+            int maxDoneId = 0;
+            foreach (var doneItem in items)
+            {
+                if (doneItem.is_done && doneItem.id > maxDoneId)
+                    maxDoneId = doneItem.id;
+            }
+
+            foreach (var item in items)
+            {
+                bool inProgress = (item.id == maxDoneId + 1);
+
+                if (!uiMap.ContainsKey(item.id))
                 {
-                    if (doneItem.is_done && doneItem.id > maxDoneId)
-                        maxDoneId = doneItem.id;
+                    GameObject obj = Instantiate(checklistPrefab, checklistParent);
+                    obj.transform.localScale = Vector3.one;
+
+                    ChecklistUI ui = obj.GetComponent<ChecklistUI>();
+                    ui.Setup(item.step_name, item.is_done, inProgress);
+                    uiMap[item.id] = ui;
                 }
-
-                foreach (var item in items)
+                else
                 {
-                    bool inProgress = (item.id == maxDoneId + 1);
-
-                    if (!uiMap.ContainsKey(item.id))
-                    {
-                        // Prefab 생성
-                        GameObject obj = Instantiate(checklistPrefab, checklistParent);
-                        obj.transform.localScale = Vector3.one;
-
-                        //RectTransform rt = obj.GetComponent<RectTransform>();
-                        //rt.localScale = Vector3.one;
-                        //rt.sizeDelta = new Vector2(checklistParent.rect.width, rt.sizeDelta.y);
-                        //rt.anchoredPosition = new Vector2(0, 0);
-
-                        ChecklistUI ui = obj.GetComponent<ChecklistUI>();
-                        ui.Setup(item.step_name, item.is_done, inProgress);
-
-                        uiMap[item.id] = ui;
-                    }
-                    else
-                    {
-                        var ui = uiMap[item.id];
-                        // 글씨, 토글, 색상 모두 갱신
-                        ui.Setup(item.step_name, item.is_done, inProgress);
-                    }
+                    var ui = uiMap[item.id];
+                    ui.Setup(item.step_name, item.is_done, inProgress);
                 }
             }
+
+            //int maxDoneId = 0;
+            //foreach (var doneItem in items)
+            //{
+            //    if (doneItem.is_done && doneItem.id > maxDoneId)
+            //        maxDoneId = doneItem.id;
+            //}
+
+            //foreach (var item in items)
+            //{
+            //    bool inProgress = (item.id == maxDoneId + 1);
+
+            //    if (!uiMap.ContainsKey(item.id))
+            //    {
+            //        GameObject obj = Instantiate(checklistPrefab, checklistParent);
+            //        obj.transform.localScale = Vector3.one;
+
+            //        ChecklistUI ui = obj.GetComponent<ChecklistUI>();
+            //        ui.Setup(item.step_name, item.is_done, inProgress);
+            //        uiMap[item.id] = ui;
+            //    }
+            //    else
+            //    {
+            //        var ui = uiMap[item.id];
+            //        ui.Setup(item.step_name, item.is_done, inProgress);
+            //    }
+            //}
         }
     }
 
-    void RefreshChecklist()
-    {
-        StartCoroutine(LoadChecklist(currentChapterId));
-    }
+    void RefreshChecklist() => StartCoroutine(LoadChecklist(currentChapterId));
 
     public void CompleteStep(int id)
     {
@@ -112,14 +143,9 @@ public class ChecklistManager : MonoBehaviour
             yield return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.Success)
-            {
-                Debug.Log("단계 완료: " + id);
-                StartCoroutine(LoadChecklist(currentChapterId)); // 현재 챕터 갱신
-            }
+                StartCoroutine(LoadChecklist(currentChapterId));
             else
-            {
                 Debug.LogError("단계 완료 실패: " + www.error);
-            }
         }
     }
 
@@ -136,16 +162,17 @@ public class ChecklistManager : MonoBehaviour
             yield return www.SendWebRequest();
 
             if (www.result == UnityWebRequest.Result.Success)
-            {
-                Debug.Log("단계 되돌리기 성공: " + id);
-                StartCoroutine(LoadChecklist(currentChapterId)); // 현재 챕터 갱신
-            }
+                StartCoroutine(LoadChecklist(currentChapterId));
             else
-            {
                 Debug.LogError("단계 되돌리기 실패: " + www.error);
-            }
         }
     }
 
+    // ✅ "돌아가기" 기능 추가
+    void ReturnToChapterSelect()
+    {
+        Debug.Log("챕터 선택 화면으로 돌아갑니다.");
+        if (checklistPanel != null) checklistPanel.SetActive(false);
+        if (chapterSelectPanel != null) chapterSelectPanel.SetActive(true);
+    }
 }
-

@@ -71,6 +71,9 @@ namespace Fusion.Addons.ConnectionManagerAddon
             // Create the Fusion runner and let it know that we will be providing user input
             if (runner == null) runner = gameObject.AddComponent<NetworkRunner>();
             runner.ProvideInput = true;
+
+            // 추가: ConnectionManager 오브젝트를 씬 전환 시 유지
+            DontDestroyOnLoad(gameObject);
         }
 
         private async void Start()
