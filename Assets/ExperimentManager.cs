@@ -27,13 +27,16 @@ public class ExperimentManager : MonoBehaviour
     public RectTransform chapterButtonParent;
     public GameObject chapterButtonPrefab;
 
+    [Header("Gpt highlighter")]
+    public ObjectHighlighter highlighter;
+
     private ChecklistManager cm;
     private List<ChapterItem> chapters = new List<ChapterItem>();
 
 
     void Awake()
     {
-        // ChecklistManager´Â Canvas ÃÖ»óÀ§¿¡ ÀÖÀ½
+        // ChecklistManagerï¿½ï¿½ Canvas ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         cm = checklistManager.GetComponent<ChecklistManager>();
         checklistPanel.SetActive(false);
     }
@@ -60,11 +63,14 @@ public class ExperimentManager : MonoBehaviour
 
     void OnChapterSelected(int chapterId)
     {
-        Debug.Log("¼±ÅÃÇÑ Ã©ÅÍ ID: " + chapterId);
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã©ï¿½ï¿½ ID: " + chapterId);
         chapterPanel.SetActive(false);
         checklistPanel.SetActive(true);
 
         cm.LoadStepsForChapter(chapterId);
+        
+        //ì¡°ìˆ˜í•œí…Œ ì±•í„°ì˜ ë¬¼ê±´ ì°¾ì„ìˆ˜ìˆê²Œí•¨
+        highlighter.SetGptChapter(chapterId);
     }
 
     IEnumerator LoadChaptersFromServer()
@@ -75,7 +81,7 @@ public class ExperimentManager : MonoBehaviour
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Ã©ÅÍ ·Îµå ½ÇÆĞ: " + www.error);
+                Debug.LogError("Ã©ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½: " + www.error);
             }
             else
             {
@@ -104,7 +110,7 @@ public class ExperimentManager : MonoBehaviour
             TMP_Text btnText = btnObj.GetComponentInChildren<TMP_Text>();
             btnText.text = chapter.name;
 
-            int capturedId = chapter.id; // ¶÷´Ù Ä¸Ã³ ¹®Á¦ ¹æÁö
+            int capturedId = chapter.id; // ï¿½ï¿½ï¿½ï¿½ Ä¸Ã³ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             btn.onClick.AddListener(() => OnChapterSelected(capturedId));
         }
     }

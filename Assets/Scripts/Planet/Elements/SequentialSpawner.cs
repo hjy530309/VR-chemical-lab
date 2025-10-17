@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using UnityEngine.SceneManagement;
 
 public class SequentialSpawner : MonoBehaviour
 {
@@ -15,46 +16,72 @@ public class SequentialSpawner : MonoBehaviour
     public NetworkRunner runner;            // Inspector에서 연결
 
     private List<GameObject> spawnedObjects = new List<GameObject>();
-    private bool isFirst = true;
 
-    public void ShowElement()
+    private void OnEnable()
     {
-        if (!isFirst) return;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
-        if (runner == null || !runner.IsRunning)
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // runner가 아직 연결되지 않았다면 DontDestroyOnLoad 씬에서 찾음
+        if (runner == null)
         {
-            Debug.LogWarning("Runner가 준비되지 않았습니다.");
-            return;
+            runner = FindObjectOfType<NetworkRunner>();
+            if (runner != null)
+                Debug.Log("SequentialSpawner: Runner reconnected from DontDestroyOnLoad");
+            else
+                Debug.LogWarning("SequentialSpawner: Runner not found in the scene!");
         }
 
-        isFirst = false;
-        SpawnNewElement();
+        // elementMgr도 자동 연결
+        if (elementMgr == null)
+        {
+            elementMgr = FindObjectOfType<ElementCounter>();
+            if (elementMgr != null)
+                Debug.Log("SequentialSpawner: ElementCounter reconnected");
+            else
+                Debug.LogWarning("SequentialSpawner: ElementCounter not found in the scene!");
+        }
     }
 
     void Update()
     {
-        if (spawnedObjects.Count == 0) return;
+        // null인 오브젝트 제거 (이미 삭제된 경우)
+        spawnedObjects.RemoveAll(obj => obj == null);
 
-        // 마지막으로 Spawn한 오브젝트만 체크
-        GameObject lastObj = spawnedObjects[spawnedObjects.Count - 1];
-        if (lastObj == null) return;
+        int remaining = elementMgr.GetElementCount(elementName);
 
+        // 마지막 오브젝트 확인
+        GameObject lastObj = spawnedObjects.Count > 0 ? spawnedObjects[spawnedObjects.Count - 1] : null;
+
+        // 마지막 오브젝트가 없으면, 남은 수 > 1 이므로 스폰
+        if (lastObj == null)
+        {
+            SpawnNewElement();
+            return;
+        }
+
+        // 마지막 오브젝트가 범위를 벗어났으면 감소 후 새 스폰
         float distance = Vector3.Distance(lastObj.transform.position, defaultPosition.position);
         if (distance > maxDistance)
         {
-            // 남은 원소가 있으면 새로 스폰
-            if (elementMgr.GetElementCount(elementName) > 0)
-            {
-                SpawnNewElement();
-            }
+            SpawnNewElement();
         }
     }
+
 
     private void SpawnNewElement()
     {
         if (elementMgr.GetElementCount(elementName) <= 0 || runner == null || objectPrefab == null)
             return;
-
+            
+        elementMgr.RemoveElement(elementName, 1);
         PlayerRef localPlayer = runner.LocalPlayer;
 
         // 월드 좌표는 Spawn 위치로 임시 지정 (0,0,0이어도 괜찮음)

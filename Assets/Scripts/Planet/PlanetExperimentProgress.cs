@@ -9,7 +9,6 @@ public class PlanetExperimentProgress : MonoBehaviour
     [SerializeField] private int stepId =1;
 
     public int nowProcess = 1;
-    public GameObject seed;
     public GameObject seedDesk;
     public GameObject dirt;
     public GameObject plant;
@@ -23,6 +22,7 @@ public class PlanetExperimentProgress : MonoBehaviour
     
     public void OnTouch(GameObject targetObj, GameObject sourceObj)
     {
+        Debug.Log("object touch" + targetObj + "and" + sourceObj);
         if (targetObj == null || sourceObj == null)
         return;
 
@@ -39,9 +39,9 @@ public class PlanetExperimentProgress : MonoBehaviour
             sourceObj.SetActive(false);
             nowProcess++;
         }
-        if(nowProcess == 2 && targetObj == seedDesk && sourceObj == seed)
+        if(nowProcess == 2 && targetObj == seedDesk && sourceObj.name.Contains("Seed"))
         {
-            seed.SetActive(false);
+            sourceObj.SetActive(false);
             dirt.SetActive(true);
             nowProcess++;
         }

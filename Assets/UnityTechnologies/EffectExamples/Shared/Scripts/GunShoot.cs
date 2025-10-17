@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Random = UnityEngine.Random;
 using Christina.GameSystems;
 using System.Diagnostics;
+using UnityEngine.SceneManagement;
 
 public class GunShoot : MonoBehaviour {
 	public float fireRate = 0.25f;										// Number in seconds which controls how often the player can fire
@@ -183,6 +184,27 @@ public class GunShoot : MonoBehaviour {
 
 		// 누적합이 1보다 작을 경우 대비 — 마지막 값 반환
 		return elements[elements.Length - 1];
+	}
+
+	private void OnEnable()
+	{
+		SceneManager.sceneLoaded += OnSceneLoaded;
+	}
+
+	private void OnDisable()
+	{
+		SceneManager.sceneLoaded -= OnSceneLoaded;
+	}
+
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		StartCoroutine(FindElementMgrNextFrame());
+	}
+
+	private IEnumerator FindElementMgrNextFrame()
+	{
+		yield return null; // 다음 프레임까지 대기
+		elementMgr = FindObjectOfType<ElementCounter>();
 	}
 
 }

@@ -97,7 +97,7 @@ namespace Fusion.XR.Host.Locomotion
                 isRayEnabled = rayAction.action.ReadValue<float>() == 1;
             }
 
-            ray.isRayEnabled = isRayEnabled;
+            ray.isRayEnabled = false;
             if (ray.isRayEnabled)
             {
                 ray.origin = origin.position;

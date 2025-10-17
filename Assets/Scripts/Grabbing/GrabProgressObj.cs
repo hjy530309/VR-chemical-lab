@@ -25,6 +25,11 @@ public class GrabProgressObj : NetworkBehaviour
         var grabbable = GetComponent<NetworkGrabbable>();
         grabbable.onDidGrab.AddListener(OnDidGrab);
         grabbable.onDidUngrab.AddListener(OnDidUngrab);
+
+        planetProgress = FindObjectOfType<PlanetExperimentProgress>();
+        progressManager = FindObjectOfType<ExperimentProgress>();
+        thermitProgress = FindObjectOfType<ThermitExperimentProgress>();
+        fireworkProgress = FindObjectOfType<FireworkProgress>();
     }
 
     private void DebugLog(string debug)
@@ -53,7 +58,8 @@ public class GrabProgressObj : NetworkBehaviour
 
     void OnDidUngrab()
     {
-        if(this.gameObject.name == "Torch")
+        thermitProgress = FindObjectOfType<ThermitExperimentProgress>();
+        if(thermitProgress != null && this.gameObject.name == "Torch")
         {
             torchEffect.DisableEffect();
         }

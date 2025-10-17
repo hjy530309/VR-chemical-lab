@@ -103,6 +103,8 @@ namespace Fusion.XR.Host.Rig
 
         protected virtual void Awake()
         {
+            DontDestroyOnLoad(gameObject);
+            
             if (leftHand) leftHandInputDevice = leftHand.GetComponentInChildren<XRControllerInputDevice>();
             if (rightHand) rightHandInputDevice = rightHand.GetComponentInChildren<XRControllerInputDevice>();
             if (headset) headsetInputDevice = headset.GetComponentInChildren<XRHeadsetInputDevice>();

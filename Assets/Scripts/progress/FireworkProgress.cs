@@ -272,7 +272,7 @@ public class FireworkProgress : MonoBehaviour
 
     public void OnPickUp(GameObject item)
     {
-        if(item.name == "FireworkTorch")
+        if(item.name == "Torch")
         {
             TorchParticle.Play();
         }
@@ -286,7 +286,7 @@ public class FireworkProgress : MonoBehaviour
 
     public void DropOff(GameObject item)
     {
-        if(item.name == "FireworkTorch")
+        if(item.name == "Torch")
         {
             TorchParticle.Stop();
         }

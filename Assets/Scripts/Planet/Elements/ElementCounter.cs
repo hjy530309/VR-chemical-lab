@@ -39,10 +39,6 @@ public class ElementCounter : MonoBehaviour
 
         elementCounts[elementName] += amount;
         UpdateUI(elementName);
-
-        // 처음 등장할 때만 스포너 실행
-        if (elementCounts[elementName] == 1 && elementMap[elementName].spawner != null)
-            elementMap[elementName].spawner.ShowElement();
     }
 
     public void RemoveElement(string elementName, int amount = 1)

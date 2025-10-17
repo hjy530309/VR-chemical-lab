@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class Recipe
@@ -121,5 +122,28 @@ public class ElementCombineManager : MonoBehaviour
         isOnCooldown = true;
         yield return new WaitForSeconds(combineCooldown);
         isOnCooldown = false;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // runner가 아직 연결되지 않았다면 DontDestroyOnLoad 씬에서 찾음
+        if (runner == null)
+        {
+            runner = FindObjectOfType<NetworkRunner>();
+            if (runner != null)
+                Debug.Log("SequentialSpawner: Runner reconnected from DontDestroyOnLoad");
+            else
+                Debug.LogWarning("SequentialSpawner: Runner not found in the scene!");
+        }
     }
 }

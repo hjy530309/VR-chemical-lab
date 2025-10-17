@@ -72,7 +72,7 @@ namespace Fusion.Addons.ConnectionManagerAddon
             if (runner == null) runner = gameObject.AddComponent<NetworkRunner>();
             runner.ProvideInput = true;
 
-            // Ãß°¡: ConnectionManager ¿ÀºêÁ§Æ®¸¦ ¾À ÀüÈ¯ ½Ã À¯Áö
+            // ï¿½ß°ï¿½: ConnectionManager ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             DontDestroyOnLoad(gameObject);
         }
 
@@ -182,6 +182,7 @@ namespace Fusion.Addons.ConnectionManagerAddon
                 // Spawn the user prefab for the local user
                 NetworkObject networkPlayerObject = runner.Spawn(userPrefab, position: transform.position, rotation: transform.rotation, player, (runner, obj) => {
                 });
+                DontDestroyOnLoad(networkPlayerObject.gameObject);
             }
         }
 
@@ -194,6 +195,7 @@ namespace Fusion.Addons.ConnectionManagerAddon
                 // We make sure to give the input authority to the connecting player for their user's object
                 NetworkObject networkPlayerObject = runner.Spawn(userPrefab, position: transform.position, rotation: transform.rotation, inputAuthority: player, (runner, obj) => {
                 });
+                DontDestroyOnLoad(networkPlayerObject.gameObject);
 
                 // Keep track of the player avatars so we can remove it when they disconnect
                 _spawnedUsers.Add(player, networkPlayerObject);

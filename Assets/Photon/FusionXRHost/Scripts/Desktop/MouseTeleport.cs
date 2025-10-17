@@ -283,7 +283,7 @@ namespace Fusion.XR.Host.Desktop
                 }
             }
 
-            if (grabbed == null && Mouse.current.rightButton.isPressed)
+            if (grabbed == null && Mouse.current.rightButton.isPressed && weaponObject != null)
             {
                 Quaternion cameraDelta = mouseCamera.transform.rotation * Quaternion.Inverse(previousCameraRotation);
     

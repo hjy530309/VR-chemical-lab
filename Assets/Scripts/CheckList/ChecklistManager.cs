@@ -46,6 +46,7 @@ public class ChecklistManager : MonoBehaviour
         foreach (Transform child in checklistParent)
             Destroy(child.gameObject);
 
+        StartCoroutine(ResetChecklist());
         StartCoroutine(LoadChecklist(chapterId));
     }
 
@@ -174,5 +175,25 @@ public class ChecklistManager : MonoBehaviour
         Debug.Log("챕터 선택 화면으로 돌아갑니다.");
         if (checklistPanel != null) checklistPanel.SetActive(false);
         if (chapterSelectPanel != null) chapterSelectPanel.SetActive(true);
+    }
+
+    // 진행 초기화
+    IEnumerator ResetChecklist()
+    {
+        using (UnityWebRequest www = UnityWebRequest.PostWwwForm("http://localhost:3000/checklist/reset", ""))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("체크리스트 초기화 성공");
+                // 필요 시 체크리스트 다시 로드
+                StartCoroutine(LoadChecklist(currentChapterId));
+            }
+            else
+            {
+                Debug.LogError("체크리스트 초기화 실패: " + www.error);
+            }
+        }
     }
 }
