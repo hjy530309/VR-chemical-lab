@@ -9,11 +9,11 @@ public class NeutronSpeedController : MonoBehaviour
 
     void Update()
     {
-        float multiplier = speedSlider.value; // 0~1 범위
-        foreach (var n in neutrons)
-        {
-            if (n != null)
-                n.ModifySpeed(multiplier); // 속도 조절
-        }
+                float multiplier = speedSlider.value; // 0~1 범위
+                foreach (var n in neutrons)
+                {
+                    if (n != null)
+                        n.ModifySpeed(multiplier); // 속도 조절
+                }
     }
 }

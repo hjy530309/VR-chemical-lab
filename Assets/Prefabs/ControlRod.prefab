@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4982119628036146036}
   - component: {fileID: 8208428295420672200}
   - component: {fileID: 1871655885408922138}
+  - component: {fileID: 5721176283466889925}
   m_Layer: 0
   m_Name: ControlRod
   m_TagString: Untagged
@@ -124,10 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fd76a571e613224b8923d66a00786ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetFuelPellet: {fileID: 0}
-  maxDistance: 2
-  controlLevel: 1
-  speedText: {fileID: 0}
+  absorbRange: 0.5
 --- !u!114 &8553019066260846507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,6 +224,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 4982119628036146036}
+  - {fileID: 5721176283466889925}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &1871655885408922138
 MonoBehaviour:
@@ -263,3 +262,20 @@ MonoBehaviour:
   commandScale: 1.5
   maxCommandMagnitude: 100
   ignorePidIntegrationWhileColliding: 1
+--- !u!114 &5721176283466889925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3287642214793482184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aceb5e5066d0934e93e2907618ed139, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  authorityText: {fileID: 0}
+  debugText: {fileID: 0}
+  progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
+  nowObj: {fileID: 0}

@@ -34,7 +34,18 @@ public class ChecklistManager : MonoBehaviour
 
         // 돌아가기 버튼 연결
         if (backButton != null)
+        {
             backButton.onClick.AddListener(ReturnToChapterSelect);
+
+            // ExperimentManager의 Back 버튼 기능 호출
+            backButton.onClick.AddListener(() =>
+            {
+                ExperimentManager expMgr = FindObjectOfType<ExperimentManager>();
+                if (expMgr != null)
+                    expMgr.OnBackButtonPressed();
+            });
+        }
+            
     }
 
     public void LoadStepsForChapter(int chapterId)
@@ -99,33 +110,6 @@ public class ChecklistManager : MonoBehaviour
                     ui.Setup(item.step_name, item.is_done, inProgress);
                 }
             }
-
-            //int maxDoneId = 0;
-            //foreach (var doneItem in items)
-            //{
-            //    if (doneItem.is_done && doneItem.id > maxDoneId)
-            //        maxDoneId = doneItem.id;
-            //}
-
-            //foreach (var item in items)
-            //{
-            //    bool inProgress = (item.id == maxDoneId + 1);
-
-            //    if (!uiMap.ContainsKey(item.id))
-            //    {
-            //        GameObject obj = Instantiate(checklistPrefab, checklistParent);
-            //        obj.transform.localScale = Vector3.one;
-
-            //        ChecklistUI ui = obj.GetComponent<ChecklistUI>();
-            //        ui.Setup(item.step_name, item.is_done, inProgress);
-            //        uiMap[item.id] = ui;
-            //    }
-            //    else
-            //    {
-            //        var ui = uiMap[item.id];
-            //        ui.Setup(item.step_name, item.is_done, inProgress);
-            //    }
-            //}
         }
     }
 
@@ -169,7 +153,7 @@ public class ChecklistManager : MonoBehaviour
         }
     }
 
-    // ✅ "돌아가기" 기능 추가
+    // "돌아가기" 기능 추가
     void ReturnToChapterSelect()
     {
         Debug.Log("챕터 선택 화면으로 돌아갑니다.");

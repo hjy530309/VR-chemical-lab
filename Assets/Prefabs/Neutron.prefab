@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  lifeTime: 20
+  lifeTime: 300
   controlRod: {fileID: 1175834605419552582, guid: 2c067bc99b7b9fd47b56ea1465d3ab3c, type: 3}
 --- !u!114 &5920429666305302737
 MonoBehaviour:

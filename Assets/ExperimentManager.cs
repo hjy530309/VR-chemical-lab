@@ -33,6 +33,11 @@ public class ExperimentManager : MonoBehaviour
     private ChecklistManager cm;
     private List<ChapterItem> chapters = new List<ChapterItem>();
 
+    [Header("Chapter Objects")]
+    public List<GameObject> chapterObjects;
+
+    private Dictionary<GameObject, Dictionary<Transform, bool>> chapterChildStates = new Dictionary<GameObject, Dictionary<Transform, bool>>();
+    private GameObject currentChapterObject = null;
 
     void Awake()
     {
@@ -63,14 +68,51 @@ public class ExperimentManager : MonoBehaviour
 
     void OnChapterSelected(int chapterId)
     {
-        Debug.Log("������ é�� ID: " + chapterId);
+        Debug.Log("선택한 챕터 ID: " + chapterId);
         chapterPanel.SetActive(false);
         checklistPanel.SetActive(true);
 
         cm.LoadStepsForChapter(chapterId);
-        
+
         //조수한테 챕터의 물건 찾을수있게함
         highlighter.SetGptChapter(chapterId);
+
+        // 챕터 오브젝트 활성화
+        for (int i = 0; i < chapterObjects.Count; i++)
+        {
+            GameObject chapterParent = chapterObjects[i];
+
+            if (i == chapterId - 1) // 선택한 챕터
+            {
+                // 현재 챕터 참조 저장
+                currentChapterObject = chapterParent;
+
+                // 자식 상태 저장
+                Dictionary<Transform, bool> childStates = new Dictionary<Transform, bool>();
+                foreach (Transform child in chapterParent.transform)
+                    childStates[child] = child.gameObject.activeSelf;
+
+                chapterParent.SetActive(true);
+
+                // 자식 상태 복원
+                foreach (var kvp in childStates)
+                    kvp.Key.gameObject.SetActive(kvp.Value);
+            }
+            else
+            {
+                chapterParent.SetActive(false);
+            }
+        }
+    }
+
+    public void OnBackButtonPressed()
+    {
+        if (currentChapterObject != null)
+        {
+            currentChapterObject.SetActive(false);
+            currentChapterObject = null;
+            Debug.Log("Back 버튼: 현재 챕터 오브젝트 비활성화됨");
+        }
     }
 
     IEnumerator LoadChaptersFromServer()
