@@ -31,6 +31,7 @@ public class ChatGptManager : MonoBehaviour
     private OpenAIApi openAI = new OpenAIApi("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");
 
     private List<ChatMessage> messages = new List<ChatMessage>();
+    //public TMP_InputField inputField;
     public InputField inputField;
     public Animator animator;
     public TextMeshProUGUI speechText;

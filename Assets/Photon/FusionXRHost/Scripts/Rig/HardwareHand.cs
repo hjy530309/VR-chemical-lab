@@ -82,6 +82,7 @@ namespace Fusion.XR.Host.Rig
         #region Haptic feedback (vibrations)
         private UnityEngine.XR.InputDevice? _device = null;
         private bool supportImpulse = false;
+        internal object networkObject;
 
         // Find the device associated to a VR controller, to be able to send it haptic feedback (vibrations)
         public UnityEngine.XR.InputDevice? Device

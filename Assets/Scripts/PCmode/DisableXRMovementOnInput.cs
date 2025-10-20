@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -5,6 +6,7 @@ using UnityEngine.UI;
 public class XRInputBlocker : MonoBehaviour
 {
     public InputField inputField; // Legacy InputField
+    //public TMP_InputField inputField;
     public InputActionAsset xrInputActions; // XR Device Simulator에 연결된 액션 에셋
 
     private bool isBlocked = false;
