@@ -129,6 +129,7 @@ using UnityEngine.ProBuilder;
 [RequireComponent(typeof(Rigidbody))]
 public class Neutron : MonoBehaviour
 {
+    public float baseSpeed = 0.2f;
     public float speed = 3f;
     public float lifeTime = 20f; // 일정 시간 후 자동 소멸
     private Rigidbody rb;
@@ -147,7 +148,8 @@ public class Neutron : MonoBehaviour
         //if (controlRod != null)
         //    initialSpeed *= controlRod.controlLevel;
 
-        rb.velocity = Random.onUnitSphere * initialSpeed;
+        rb.velocity = Random.onUnitSphere * baseSpeed;
+        //rb.velocity = Random.onUnitSphere * initialSpeed;
         NeutronManager.Instance.RegisterNeutron(this);
 
         StartCoroutine(EnableCollisionAfterDelay(0.05f));
@@ -205,6 +207,8 @@ public class Neutron : MonoBehaviour
 
     public void ModifySpeed(float multiplier)
     {
+        if (rb.velocity.magnitude > 0.01f)
+            rb.velocity = rb.velocity.normalized * baseSpeed * multiplier;
         rb.velocity = rb.velocity.normalized * speed * multiplier;
     }
 }

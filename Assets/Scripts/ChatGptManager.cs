@@ -177,7 +177,6 @@ public class ChatGptManager : MonoBehaviour
     {
         speechText.text = "";
         int currentLineLength = 0;
-
         foreach (char letter in text)
         {
             speechText.text += letter;

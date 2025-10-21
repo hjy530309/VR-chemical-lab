@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class FireworkProgress : MonoBehaviour
 {
@@ -49,6 +51,7 @@ public class FireworkProgress : MonoBehaviour
     public float shakeSensitivity = 1f; // 흔들림 감도
     private Vector3 lastPosition;
     private bool isFirst = true;
+    private object currentChapterId;
 
     void Start()
     {
@@ -89,6 +92,40 @@ public class FireworkProgress : MonoBehaviour
 
             lastPosition = currentPosition;
         }
+    }
+
+
+    IEnumerator UndoStepAPI(int id)
+    {
+        string url = $"http://localhost:3000/checklist/undo/{id}/{currentChapterId}";
+        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(url, "")) // 빈 body로 POST
+        {
+            www.timeout = 10; // 타임아웃(초) 설정, 필요시 조절
+            yield return www.SendWebRequest();
+
+#if UNITY_2020_1_OR_NEWER
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
+#else
+        if (www.isNetworkError || www.isHttpError)
+#endif
+            {
+                Debug.LogError($"UndoStepAPI 실패: URL={url} Error={www.error}");
+                // 서버가 응답 본문을 줬다면 같이 찍어보기
+                if (www.downloadHandler != null)
+                    Debug.LogError($"서버 응답(body): {www.downloadHandler.text}");
+            }
+            else
+            {
+                Debug.Log($"UndoStepAPI 성공: id={id}, chapter={currentChapterId}  응답: {www.downloadHandler.text}");
+                // 성공이면 체크리스트 갱신
+                StartCoroutine(LoadChecklist(currentChapterId));
+            }
+        }
+    }
+
+    private string LoadChecklist(object currentChapterId)
+    {
+        throw new NotImplementedException();
     }
 
     public void OnPowderTouch(GameObject targetObj, GameObject sourceObj)

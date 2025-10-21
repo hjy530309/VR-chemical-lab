@@ -5,7 +5,7 @@ using UnityEngine;
 public class FuelPellet : MonoBehaviour
 {
     [Header("연쇄 반응 설정")]
-    public int maxSpawnPerFission = 3;         // 한 번 핵분열 시 생성할 Neutron 수
+    public int maxSpawnPerFission = 2;         // 한 번 핵분열 시 생성할 Neutron 수
     public float neutronSpeed = 5f;            // 기본 Neutron 속도
     public GameObject neutronPrefab;           // Neutron Prefab
     public ControlRod controlRod;              // Scene에서 연결 (Control Rod)

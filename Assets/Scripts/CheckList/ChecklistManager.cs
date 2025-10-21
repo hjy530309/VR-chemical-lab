@@ -2,7 +2,8 @@
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI; // ← UI 전환용
+using UnityEngine.UI;
+using System; // ← UI 전환용
 
 [System.Serializable]
 public class ChecklistItem
@@ -123,7 +124,8 @@ public class ChecklistManager : MonoBehaviour
 
     IEnumerator CompleteStepAPI(int id)
     {
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm("http://localhost:3000/checklist/complete/" + id, ""))
+        using (UnityWebRequest www = UnityWebRequest.PostWwwForm(
+            $"http://localhost:3000/checklist/complete/{id}/{currentChapterId}", ""))
         {
             yield return www.SendWebRequest();
 
@@ -134,15 +136,9 @@ public class ChecklistManager : MonoBehaviour
         }
     }
 
-    public void UndoStep(int id)
+    IEnumerator UndoStepA(int id)
     {
-        Debug.Log($"ChecklistManager: 단계 되돌리기 호출됨 (ID: {id})");
-        StartCoroutine(UndoStepAPI(id));
-    }
-
-    IEnumerator UndoStepAPI(int id)
-    {
-        using (UnityWebRequest www = UnityWebRequest.PostWwwForm("http://localhost:3000/checklist/undo/" + id, ""))
+        using (UnityWebRequest www = UnityWebRequest.PostWwwForm($"http://localhost:3000/checklist/undo/{id}/{currentChapterId}", ""))
         {
             yield return www.SendWebRequest();
 
@@ -152,6 +148,38 @@ public class ChecklistManager : MonoBehaviour
                 Debug.LogError("단계 되돌리기 실패: " + www.error);
         }
     }
+
+    //IEnumerator CompleteStepAPI(int id)
+    //{
+    //    using (UnityWebRequest www = UnityWebRequest.PostWwwForm("http://localhost:3000/checklist/complete/" + id, ""))
+    //    {
+    //        yield return www.SendWebRequest();
+
+    //        if (www.result == UnityWebRequest.Result.Success)
+    //            StartCoroutine(LoadChecklist(currentChapterId));
+    //        else
+    //            Debug.LogError("단계 완료 실패: " + www.error);
+    //    }
+    //}
+
+    //public void UndoStep(int id)
+    //{
+    //    Debug.Log($"ChecklistManager: 단계 되돌리기 호출됨 (ID: {id})");
+    //    StartCoroutine(UndoStepAPI(id));
+    //}
+
+    //IEnumerator UndoStepAPI(int id)
+    //{
+    //    using (UnityWebRequest www = UnityWebRequest.PostWwwForm("http://localhost:3000/checklist/undo/" + id, ""))
+    //    {
+    //        yield return www.SendWebRequest();
+
+    //        if (www.result == UnityWebRequest.Result.Success)
+    //            StartCoroutine(LoadChecklist(currentChapterId));
+    //        else
+    //            Debug.LogError("단계 되돌리기 실패: " + www.error);
+    //    }
+    //}
 
     // "돌아가기" 기능 추가
     void ReturnToChapterSelect()
@@ -179,5 +207,10 @@ public class ChecklistManager : MonoBehaviour
                 Debug.LogError("체크리스트 초기화 실패: " + www.error);
             }
         }
+    }
+
+    internal void UndoStep(int v)
+    {
+        throw new NotImplementedException();
     }
 }
