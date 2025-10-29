@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.UI; // Slider 사용
 
 public class ColorBottleChanger : MonoBehaviour
 {
     public Renderer liquidRenderer;
+    public Slider colorSlider; // UI Slider 연결
 
     // 빨, 주, 노, 초, 파, 남, 보
     private Color[] rainbowColors = new Color[]
@@ -16,22 +18,19 @@ public class ColorBottleChanger : MonoBehaviour
         new Color(0.5f, 0f, 0.5f) // 보라
     };
 
-    void Update()
+    void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            ChangeColor(0); // 빨강
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-            ChangeColor(1); // 주황
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-            ChangeColor(2); // 노랑
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-            ChangeColor(3); // 초록
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-            ChangeColor(4); // 파랑
-        if (Input.GetKeyDown(KeyCode.Alpha9))
-            ChangeColor(5); // 남색
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-            ChangeColor(6); // 보라
+        // 슬라이더 최대/최소 설정
+        colorSlider.minValue = 0f;
+        colorSlider.maxValue = rainbowColors.Length - 1;
+        colorSlider.wholeNumbers = true; // 정수값만
+        colorSlider.onValueChanged.AddListener(OnSliderChanged);
+    }
+
+    void OnSliderChanged(float value)
+    {
+        int index = Mathf.RoundToInt(value); // 슬라이더 값 → 색 인덱스
+        ChangeColor(index);
     }
 
     void ChangeColor(int index)

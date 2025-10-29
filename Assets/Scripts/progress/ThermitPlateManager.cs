@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ThermitPlateManager : MonoBehaviour
 {
+    public ParticleSystem powderParticles;
     public GameObject powder;
     public GameObject ribbon;
     public GameObject plateRibbon;
@@ -17,6 +18,8 @@ public class ThermitPlateManager : MonoBehaviour
     private float obj2Scale  = 0f;
 
     public float duration = 5f;   // 내려가는 시간
+    private ParticleSystemRenderer psRenderer;
+    private Material instantiatedMaterial;
 
     void Start()
     {
@@ -25,6 +28,14 @@ public class ThermitPlateManager : MonoBehaviour
         StopFire();
         HidePlateRibbon();
         StopExplosion();
+
+        if (powderParticles == null) return;
+
+        psRenderer = powderParticles.GetComponent<ParticleSystemRenderer>();
+
+        // Material 복제 (공유되지 않게)
+        instantiatedMaterial = new Material(psRenderer.material);
+        psRenderer.material = instantiatedMaterial;
     }
 
     public void PlayFire()
@@ -54,11 +65,21 @@ public class ThermitPlateManager : MonoBehaviour
     {
         powder.SetActive(false);
     }
+    public void SetParticleColor(Color color)
+    {
+        if (instantiatedMaterial != null)
+        {
+            instantiatedMaterial.color = color;  // Material 색상 변경
+        }
+    }
 
     public float GetCurrentScale()
     {
         return powder.transform.localScale.x; // uniform scale이라 x 하나만 리턴
     }
+
+    public float minY = 0.125f;
+    public float maxY = 0.28f;
 
     public void IncreasePowderScale(GameObject sourceObj, GameObject obj1, GameObject obj2)
     {
@@ -74,12 +95,47 @@ public class ThermitPlateManager : MonoBehaviour
 
         float totalScale = obj1Scale + obj2Scale; 
         powder.transform.localScale = Vector3.one * totalScale;
+
+        // ypos 계산
+        float maxTotalScale = maxScaleObj1 + maxScaleObj2;
+        float t = Mathf.Clamp01(totalScale / maxTotalScale); // 0~1 비율
+        float newY = Mathf.Lerp(minY, maxY, t);
+        Vector3 pos = powder.transform.localPosition;
+        pos.y = newY;
+        powder.transform.localPosition = pos;
+    }
+
+
+    public void DecreasePowderScale(float amount)
+    {
+        obj1Scale = Mathf.Max(obj1Scale - amount, 0f);
+        obj2Scale = Mathf.Max(obj2Scale - amount, 0f);
+
+        float totalScale = obj1Scale + obj2Scale;
+        powder.transform.localScale = Vector3.one * totalScale;
+
+        // ypos 계산
+        float maxTotalScale = maxScaleObj1 + maxScaleObj2;
+        float t = Mathf.Clamp01(totalScale / maxTotalScale); // 0~1 비율
+        float newY = Mathf.Lerp(minY, maxY, t);
+        Vector3 pos = powder.transform.localPosition;
+        pos.y = newY;
+        powder.transform.localPosition = pos;
+
+        // powder가 완전히 줄어들면 비활성화
+        if (totalScale <= 0f)
+            powder.SetActive(false);
     }
 
     // 비율 계산
     public Vector2 GetRatio()
     {
         if (obj2Scale  == 0f) return new Vector2(1f, 0f);
+        return new Vector2(obj1Scale , obj2Scale );
+    }
+
+    public Vector2 GetScale()
+    {
         return new Vector2(obj1Scale , obj2Scale );
     }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ExperimentProgress : MonoBehaviour
 {
+    [SerializeField] private ExperimentFeedbackManager feedbackManager;
+
     [SerializeField] private ChecklistManager checklistManager;
     [SerializeField] private int stepId =1;
 
@@ -72,8 +74,12 @@ public class ExperimentProgress : MonoBehaviour
             Vector3 currentPosition = Progress2_Obj2.transform.position;
 
             float movement = (currentPosition - lastPosition).magnitude;
+            
+            Rigidbody rb = Progress2_Obj2.GetComponent<Rigidbody>();
+            float velocity = (rb != null) ? rb.velocity.magnitude : 0f;
+
             // 흔들림 정도 계산
-            if (movement * shakeSensitivity > 0.5f) // 약간의 움직임 무시
+            if (movement * shakeSensitivity > 0.5f && velocity > 0.01f) // 약간의 움직임 무시
             {
                 // 흔들림이 감지되면 주황색으로 변경
                 mpb.SetColor("_GradientTopColor", shakeColor);
@@ -87,6 +93,28 @@ public class ExperimentProgress : MonoBehaviour
             lastPosition = currentPosition;
         }
 
+        LiquidVolumeAnimator flask = Progress2_Obj2.GetComponentInChildren<LiquidVolumeAnimator>();
+        switch(nowProcess)
+        {
+            case 1:
+                if(flask != null && flask.level >= 0.3 && flask.level <= 0.6)
+                {
+                    nowProcess = 2;
+                    checklistManager.CompleteStep(stepId);
+                    stepId++;
+                    feedbackManager.CheckAmount(Progress2_Obj2.name, flask.level);
+                }
+                break;
+            case 2:
+                if(flask != null && flask.level <0.3 || flask.level > 0.6)
+                {
+                    nowProcess = 1;
+                    checklistManager.UndoStep(stepId-1);
+                    stepId--;
+                    feedbackManager.CheckAmount(Progress2_Obj2.name, flask.level);
+                }
+                break;
+        }
     }
 
     public void OnLiquidTouch(GameObject targetObj, GameObject sourceObj)
@@ -100,15 +128,11 @@ public class ExperimentProgress : MonoBehaviour
                if ((sourceObj == Progress1_Obj1 || sourceObj == Progress1_Obj2) &&
                 (targetObj == Progress1_Obj1 || targetObj == Progress1_Obj2))
                 {
-                    if (target != null && target.level >= 0.1f)
+                    if (target != null && target.level != 0f)
                     {
                         if (smashParticle == null) return;
                         var main = smashParticle.main;
                         main.startColor = smashParticleColor1;
-
-                        nowProcess++;
-                        checklistManager.CompleteStep(stepId);
-                        stepId++;
                     }
 
                 }
@@ -119,7 +143,7 @@ public class ExperimentProgress : MonoBehaviour
                 {
                     SpoonManager spoonMgr = sourceObj.GetComponent<SpoonManager>();
 
-                    if (spoonMgr != null && spoonMgr.liquid.activeSelf)
+                    if ((spoonMgr != null && spoonMgr.liquid.activeSelf) || sourceObj.name == "Fairy")
                     {
                         // 액체의 TopColor만 변경
                         mpb.SetColor("_GradientTopColor", newTopColor);
@@ -190,5 +214,11 @@ public class ExperimentProgress : MonoBehaviour
 
     public void OnPickUp(GameObject item)
     {
+    }
+
+    //양이 적절한지 확인
+    void CheckLiquid(GameObject obj, float amount)
+    {
+        feedbackManager.CheckAmount(obj.name, amount);
     }
 }
