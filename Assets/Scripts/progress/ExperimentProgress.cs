@@ -49,6 +49,10 @@ public class ExperimentProgress : MonoBehaviour
     public Color smashParticleColor1 = new Color(1f, 0f, 0f, 1f);
     public Color smashParticleColor2 = new Color(1f, 0.5f, 0f);
 
+    public ParticleSystem flaskResultParticle;
+    private ParticleSystemRenderer psRenderer;
+    private Material instantiatedMaterial;
+
     void Start()
     {
         BubbleParticles.Stop();
@@ -57,11 +61,22 @@ public class ExperimentProgress : MonoBehaviour
         // 기존 프로퍼티 가져오기
         targetRenderer.GetPropertyBlock(mpb);
         lastPosition = Progress2_Obj2.transform.position;
+
+        if (flaskResultParticle == null) return;
+        psRenderer = flaskResultParticle.GetComponent<ParticleSystemRenderer>();
+        instantiatedMaterial = new Material(psRenderer.material);
+        psRenderer.material = instantiatedMaterial;
     }
     void Update()
     {
         if(nowProcess == 5)
         {
+            LiquidVolumeAnimator target = Progress1_Obj2.GetComponentInChildren<LiquidVolumeAnimator>();
+        
+            float gravity = Mathf.Lerp(3f, 1f, target.level); 
+            var main = BubbleParticles.main;
+            main.gravityModifier = gravity;
+
             BubbleParticles.Play();
             nowProcess++;
             checklistManager.CompleteStep(stepId);
@@ -154,6 +169,11 @@ public class ExperimentProgress : MonoBehaviour
                         if (smashParticle == null) return;
                         var main = smashParticle.main;
                         main.startColor = smashParticleColor2;
+
+                        if (instantiatedMaterial != null)
+                        {
+                            instantiatedMaterial.color = smashParticleColor2;  // Material 색상 변경
+                        }
 
                         nowProcess++;
                         checklistManager.CompleteStep(stepId);

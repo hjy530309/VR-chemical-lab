@@ -70,6 +70,14 @@ public class GrabProgressObj : NetworkBehaviour
             fireworkProgress.DropOff(this.gameObject);
         }
 
+        foreach (Transform child in this.GetComponentsInChildren<Transform>(true))
+        {
+            if (child.name == "Canvas")
+            {
+                child.gameObject.SetActive(true);
+            }
+        }
+
         DebugLog($"{gameObject.name} ungrabbed");
         hasPickedUp = false;
     }
@@ -84,6 +92,15 @@ public class GrabProgressObj : NetworkBehaviour
                 torchEffect.EnableEffect(); // 파티클 실행
             }
         }
+
+        foreach (Transform child in this.GetComponentsInChildren<Transform>(true))
+        {
+            if (child.name == "Canvas")
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
+
         DebugLog($"{gameObject.name} grabbed by {newGrabber.Object.InputAuthority} {newGrabber.hand.side} hand");
         Debug.Log($"{transform.root.tag} tag from root");
         Debug.Log($"{gameObject.tag} tag name");

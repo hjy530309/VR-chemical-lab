@@ -40,7 +40,7 @@ public class SpawnSeed : MonoBehaviour
         SpawnSeedObject();
     }
 
-    private void SpawnSeedObject()
+    public void SpawnSeedObject()
     {
         if (objectPrefab == null) return;
 

@@ -18,9 +18,16 @@ public class DeskMaterialToggle : MonoBehaviour
         mr.materials = mats;
     }
 
-    public void ShowHiddenMaterial()
+    public void ShowHiddenMaterial(Color color)
     {
-        Color color = new Color(82f/255f, 33f/255f, 7f/255f);
+        // 두 번째 Material 색 변경
+        mats[1].color = color;
+        mr.materials = mats;
+    }
+
+    public void HideHiddenMaterial()
+    {
+        Color color = new Color(35f/255f, 89f/255f, 116f/255f);
         // 두 번째 Material 색 변경
         mats[1].color = color;
         mr.materials = mats;

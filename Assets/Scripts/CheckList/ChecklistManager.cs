@@ -190,7 +190,7 @@ public class ChecklistManager : MonoBehaviour
     }
 
     // 진행 초기화
-    IEnumerator ResetChecklist()
+    public IEnumerator ResetChecklist()
     {
         using (UnityWebRequest www = UnityWebRequest.PostWwwForm("http://localhost:3000/checklist/reset", ""))
         {

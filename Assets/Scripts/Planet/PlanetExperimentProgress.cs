@@ -17,7 +17,7 @@ public class PlanetExperimentProgress : MonoBehaviour
     void Start()
     {
         dirt.SetActive(false);
-        plant.SetActive(false);
+        plant.SetActive(true);
     }
     
     public void OnTouch(GameObject targetObj, GameObject sourceObj)
@@ -31,25 +31,42 @@ public class PlanetExperimentProgress : MonoBehaviour
 
         // TryCombine 호출
         combineMgr.TryCombine(selectedObjects);
-
-        if(nowProcess == 1 & targetObj == seedDesk && sourceObj.name.Contains("Soil"))
+        
+        if(targetObj == seedDesk && sourceObj.name.Contains("SiO2"))
         {
             DeskMaterialToggle deskMaterial = FindObjectOfType<DeskMaterialToggle>();
-            deskMaterial.ShowHiddenMaterial();
+            if(sourceObj.name.Contains("Fe"))
+            {
+                deskMaterial.ShowHiddenMaterial(new Color(205f / 255f, 91f / 255f, 51f / 255f));
+            }
+            else
+            {
+                deskMaterial.ShowHiddenMaterial(new Color(239f / 255f, 155f / 255f, 76f / 255f));
+            }
             sourceObj.SetActive(false);
+            plantGrow.hasSand = true;
+        }
+        if(targetObj == seedDesk && sourceObj.name.Contains("Soil"))
+        {
+            DeskMaterialToggle deskMaterial = FindObjectOfType<DeskMaterialToggle>();
+            deskMaterial.ShowHiddenMaterial(new Color(82f/255f, 33f/255f, 7f/255f));
+            sourceObj.SetActive(false);
+            plantGrow.hasSoil = true;
+            plantGrow.hasSand = false;
             nowProcess++;
         }
-        if(nowProcess == 2 && targetObj == seedDesk && sourceObj.name.Contains("Seed"))
+        if(targetObj == seedDesk && sourceObj.name.Contains("Seed"))
         {
             sourceObj.SetActive(false);
             dirt.SetActive(true);
+            plantGrow.hasSeed = true;
             nowProcess++;
         }
-        if(nowProcess == 3 && targetObj == seedDesk && sourceObj.name.Contains("H2O"))
+        if(targetObj == seedDesk && sourceObj.name.Contains("H2O"))
         {
             sourceObj.SetActive(false);
             plant.SetActive(true);
-            plantGrow.StartGrowing();
+            plantGrow.hasWater = true;
             nowProcess++;
         }
     }
