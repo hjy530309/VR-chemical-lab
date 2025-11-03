@@ -49,7 +49,7 @@ public class ExperimentProgress : MonoBehaviour
     public Color smashParticleColor1 = new Color(1f, 0f, 0f, 1f);
     public Color smashParticleColor2 = new Color(1f, 0.5f, 0f);
 
-    public ParticleSystem flaskResultParticle;
+    public AudioSource resultAudio;
     private ParticleSystemRenderer psRenderer;
     private Material instantiatedMaterial;
 
@@ -62,11 +62,21 @@ public class ExperimentProgress : MonoBehaviour
         targetRenderer.GetPropertyBlock(mpb);
         lastPosition = Progress2_Obj2.transform.position;
 
-        if (flaskResultParticle == null) return;
-        psRenderer = flaskResultParticle.GetComponent<ParticleSystemRenderer>();
         instantiatedMaterial = new Material(psRenderer.material);
         psRenderer.material = instantiatedMaterial;
     }
+    
+    void Awake()
+    {
+        if (checklistManager == null)
+        {
+            checklistManager = FindObjectOfType<ChecklistManager>();
+            if(checklistManager == null)
+                Debug.LogError("ChecklistManager를 찾을 수 없습니다!");
+        }
+    }
+
+
     void Update()
     {
         if(nowProcess == 5)
@@ -78,6 +88,7 @@ public class ExperimentProgress : MonoBehaviour
             main.gravityModifier = gravity;
 
             BubbleParticles.Play();
+            resultAudio.Play();
             nowProcess++;
             checklistManager.CompleteStep(stepId);
             stepId++;
@@ -154,7 +165,7 @@ public class ExperimentProgress : MonoBehaviour
                 break;
 
             case 2:
-                if (sourceObj == Progress2_Obj1 || targetObj == Progress2_Obj2)
+                if ((sourceObj == Progress2_Obj1 || sourceObj.name == "Fairy") && targetObj == Progress2_Obj2)
                 {
                     SpoonManager spoonMgr = sourceObj.GetComponent<SpoonManager>();
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpoonManager : MonoBehaviour
 {
+    public AudioSource powderAudio;
     public GameObject liquid;
     public GameObject powder;
     public bool hasPowder = false;
@@ -23,6 +24,7 @@ public class SpoonManager : MonoBehaviour
 
     public void ActivePowder()
     {
+        powderAudio.Play();
         powder.SetActive(true);
         hasPowder = true;
     }
