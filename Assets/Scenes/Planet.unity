@@ -25161,6 +25161,37 @@ CapsuleCollider:
   m_Height: 0.035
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1395677003
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1395677004}
+  m_Layer: 0
+  m_Name: VRGunShowManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1395677004
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395677003}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.3420201, y: -0, z: -0, w: 0.9396927}
+  m_LocalPosition: {x: 0.18, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1488076576}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1400903774
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26633,6 +26664,7 @@ Transform:
   - {fileID: 335382908}
   - {fileID: 931802371}
   - {fileID: 1471341703}
+  - {fileID: 1395677004}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1489356160
@@ -26751,6 +26783,8 @@ MonoBehaviour:
   - {fileID: 1000013169864706, guid: e5a3d6da48298a0458c1990f58c27069, type: 3}
   - {fileID: 1000010191825552, guid: 83e55d3418297934fab882559d009285, type: 3}
   woodHitEffect: {fileID: 1000011190285628, guid: beb3acff7ab73944fb8f470f24d74ed3, type: 3}
+  isVRMode: 0
+  useTriggerInput: 1
 --- !u!1 &1496496209
 GameObject:
   m_ObjectHideFlags: 0

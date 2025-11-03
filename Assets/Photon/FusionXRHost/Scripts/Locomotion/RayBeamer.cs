@@ -93,17 +93,15 @@ namespace Fusion.XR.Host.Locomotion
             return BeamCast(out hitInfo, ray.origin, origin.forward);
         }
 
-
-        // 기존 코드에 이 부분만 추가
         public virtual void Update()
         {
             if (useRayActionInput && rayAction != null && rayAction.action != null)
             {
                 isRayEnabled = rayAction.action.ReadValue<float>() == 1;
-                Debug.Log($"Ray 입력: {isRayEnabled}, 버튼 값: {rayAction.action.ReadValue<float>()}");
+                //Debug.Log($"Ray 입력: {isRayEnabled}, 버튼 값: {rayAction.action.ReadValue<float>()}");
             }
 
-            ray.isRayEnabled = isRayEnabled; // 이 줄이 중요!
+            ray.isRayEnabled = isRayEnabled; 
 
             if (ray.isRayEnabled)
             {
@@ -144,7 +142,7 @@ namespace Fusion.XR.Host.Locomotion
                 if (status == Status.BeamHit)
                 {
                     //  디버그: 릴리스 시 어떤 오브젝트에 신호 보내는지
-                    Debug.Log($" UI 릴리스: {lastHitCollider?.name}");
+                    //Debug.Log($" UI 릴리스: {lastHitCollider?.name}");
                     if (onRelease != null) onRelease.Invoke(lastHitCollider, lastHit);
 
                     //  자동 클릭 처리
@@ -153,7 +151,7 @@ namespace Fusion.XR.Host.Locomotion
                         Button button = lastHitCollider.GetComponent<Button>();
                         if (button != null && button.interactable)
                         {
-                            Debug.Log($" 버튼 클릭 실행: {button.name}");
+                            //Debug.Log($" 버튼 클릭 실행: {button.name}");
                             button.onClick.Invoke();
                         }
                     }
@@ -192,7 +190,7 @@ namespace Fusion.XR.Host.Locomotion
                 lineRenderer.endColor = ray.color;
 
                 //  현재 적용된 색상 확인
-                Debug.Log($" 적용된 색상: {ray.color}, 머티리얼: {lineRenderer.material.color}");
+                //Debug.Log($" 적용된 색상: {ray.color}, 머티리얼: {lineRenderer.material.color}");
             }
         }
         void CreateSimpleMaterial()
@@ -205,7 +203,7 @@ namespace Fusion.XR.Host.Locomotion
                 newMat.name = "DynamicLineMaterial";
                 newMat.color = Color.white;
                 lineRenderer.material = newMat;
-                Debug.Log("새로운 머티리얼 생성됨");
+                //Debug.Log("새로운 머티리얼 생성됨");
             }
         }
     }
