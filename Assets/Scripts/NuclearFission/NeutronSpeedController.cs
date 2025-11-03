@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NeutronSpeedController : MonoBehaviour
 {
@@ -15,18 +16,32 @@ public class NeutronSpeedController : MonoBehaviour
     [Header("UI")]
     [Tooltip("중성자 속도 표시 텍스트")]
     public TMP_Text speedText;
+    public Button increaseButton;
+    public Button decreaseButton;
 
     [HideInInspector]
-    public float globalMultiplier = 1f; // 현재 속도 배율, 인스펙터에서 보여주지 않음
+    public float globalMultiplier = 1f; // 현재 속도 배율
 
     private List<Neutron> neutrons => NeutronManager.Instance.GetNeutrons();
 
-    void Start()
+    void OnEnable()
     {
+        // 버튼 이벤트 재등록
+        if (increaseButton != null)
+        {
+            increaseButton.onClick.RemoveAllListeners();
+            increaseButton.onClick.AddListener(IncreaseSpeed);
+        }
+
+        if (decreaseButton != null)
+        {
+            decreaseButton.onClick.RemoveAllListeners();
+            decreaseButton.onClick.AddListener(DecreaseSpeed);
+        }
+
         UpdateSpeedUI();
     }
 
-    // 버튼 OnClick에서 선택 가능
     public void IncreaseSpeed()
     {
         globalMultiplier = Mathf.Min(globalMultiplier + speedStep, maxMultiplier);

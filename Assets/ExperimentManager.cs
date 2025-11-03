@@ -148,14 +148,48 @@ public class ExperimentManager : MonoBehaviour
             GameObject btnObj = Instantiate(chapterButtonPrefab, chapterButtonParent);
             btnObj.transform.localScale = Vector3.one;
 
+            SetupClonedButton(btnObj);
+
             Button btn = btnObj.GetComponent<Button>();
             TMP_Text btnText = btnObj.GetComponentInChildren<TMP_Text>();
             btnText.text = chapter.name;
 
-            int capturedId = chapter.id; // ���� ĸó ���� ����
+            int capturedId = chapter.id;
             btn.onClick.AddListener(() => OnChapterSelected(capturedId));
         }
     }
 
+    void SetupClonedButton(GameObject buttonObj)
+    {
+        // 1. 레이어 강제 설정
+        buttonObj.layer = LayerMask.NameToLayer("UI");
+
+        // 2. Collider 확인 및 추가
+        BoxCollider collider = buttonObj.GetComponent<BoxCollider>();
+        if (collider == null)
+        {
+            collider = buttonObj.AddComponent<BoxCollider>();
+            RectTransform rect = buttonObj.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                collider.size = new Vector3(rect.rect.width, rect.rect.height, 10f); // Z 두껍게
+                collider.center = Vector3.zero;
+            }
+            Debug.Log($"🔹 Collider 추가됨: {buttonObj.name}");
+        }
+
+        // 3. Button 컴포넌트 활성화 확인
+        Button button = buttonObj.GetComponent<Button>();
+        if (button != null)
+        {
+            button.interactable = true;
+        }
+
+        // 4. 모든 자식에도 레이어 설정 (중요!)
+        foreach (Transform child in buttonObj.transform)
+        {
+            child.gameObject.layer = LayerMask.NameToLayer("UI");
+        }
+    }
 
 }

@@ -33,30 +33,6 @@ public class FuelPellet : MonoBehaviour
         if (fissionEffect != null)
             Instantiate(fissionEffect, transform.position, Quaternion.identity);
 
-        // 2 연쇄 Neutron 생성
-        //for (int i = 0; i < maxSpawnPerFission; i++)
-        //{
-        //    // FuelPellet 중심 겹치지 않도록 offset
-        //    float spawnDistance = 0.2f + 0.05f; // FuelPellet 반지름 + Neutron 반지름
-        //    Vector3 offset = Random.onUnitSphere * spawnDistance;
-
-        //    GameObject n = Instantiate(neutronPrefab, transform.position + offset, Random.rotation);
-        //    Rigidbody nRb = n.GetComponent<Rigidbody>();
-
-        //    // Control Rod 속도 적용
-        //    //float speedMultiplier = controlRod != null ? controlRod.controlLevel : 1f;
-        //    //nRb.velocity = Random.onUnitSphere * neutronSpeed * speedMultiplier;
-
-        //    // Rigidbody 세팅
-        //    nRb.useGravity = false;
-        //    nRb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        //    nRb.interpolation = RigidbodyInterpolation.Interpolate;
-        //    nRb.drag = 0;
-
-        //    // NeutronManager 등록
-        //    NeutronManager.Instance.RegisterNeutron(n.GetComponent<Neutron>());
-        //}
-
         // 2. Neutron 생성
         for (int i = 0; i < maxSpawnPerFission; i++)
         {
