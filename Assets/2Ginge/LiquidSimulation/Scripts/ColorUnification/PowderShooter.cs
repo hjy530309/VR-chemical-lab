@@ -25,7 +25,7 @@ public class PowderShooter : MonoBehaviour
             sourceObj = sourceObj.transform.parent != null ? sourceObj.transform.parent.gameObject : null;
         }
 
-        if(sourceObj.name == "Spoon" && targetObj.name == "Plate")
+        if(sourceObj.name == "Spoon" && targetObj.name == "Plate" && spoonMgr != null)
         {
             ParticleSystem ps = this.GetComponent<ParticleSystem>();
 

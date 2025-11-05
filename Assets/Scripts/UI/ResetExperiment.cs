@@ -7,6 +7,9 @@ public class ResetExperiment : MonoBehaviour
     public ChecklistManager checklist;
 
     public void experimentReset(){
+        ExperimentManager expMgr = FindObjectOfType<ExperimentManager>();
+        if (expMgr != null)
+            expMgr.OnResetButtonPressed();
         StartCoroutine(checklist.ResetChecklist());
     }
 }

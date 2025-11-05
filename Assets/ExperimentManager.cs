@@ -1,3 +1,5 @@
+using Fusion;
+using Fusion.Sockets;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -33,11 +35,15 @@ public class ExperimentManager : MonoBehaviour
     private ChecklistManager cm;
     private List<ChapterItem> chapters = new List<ChapterItem>();
 
-    [Header("Chapter Objects")]
-    public List<GameObject> chapterObjects;
+    [Header("Chapter Prefabs")]
+    public List<NetworkPrefabRef> chapterPrefabs;
+
+    private NetworkObject currentChapterInstance;
+    public NetworkRunner runner;
+
+    private int lastSelectedChapterId = 0;
 
     private Dictionary<GameObject, Dictionary<Transform, bool>> chapterChildStates = new Dictionary<GameObject, Dictionary<Transform, bool>>();
-    private GameObject currentChapterObject = null;
 
     void Awake()
     {
@@ -46,10 +52,16 @@ public class ExperimentManager : MonoBehaviour
         checklistPanel.SetActive(false);
     }
 
-    void Start()
+    IEnumerator Start()
     {
+        if (runner == null)
+        {
+            Debug.LogError("❌ NetworkRunner not found in scene!");
+            yield break;
+        }
+
         ShowStartPanel();
-        StartCoroutine(LoadChaptersFromServer());
+        yield return LoadChaptersFromServer();
     }
 
     public void ShowStartPanel()
@@ -69,6 +81,7 @@ public class ExperimentManager : MonoBehaviour
     void OnChapterSelected(int chapterId)
     {
         Debug.Log("선택한 챕터 ID: " + chapterId);
+        lastSelectedChapterId = chapterId;
         chapterPanel.SetActive(false);
         checklistPanel.SetActive(true);
 
@@ -77,41 +90,61 @@ public class ExperimentManager : MonoBehaviour
         //조수한테 챕터의 물건 찾을수있게함
         highlighter.SetGptChapter(chapterId);
 
-        // 챕터 오브젝트 활성화
-        for (int i = 0; i < chapterObjects.Count; i++)
+        // 🔄 기존 인스턴스 제거
+        if (currentChapterInstance != null)
         {
-            GameObject chapterParent = chapterObjects[i];
-
-            if (i == chapterId - 1) // 선택한 챕터
-            {
-                // 현재 챕터 참조 저장
-                currentChapterObject = chapterParent;
-
-                // 자식 상태 저장
-                Dictionary<Transform, bool> childStates = new Dictionary<Transform, bool>();
-                foreach (Transform child in chapterParent.transform)
-                    childStates[child] = child.gameObject.activeSelf;
-
-                chapterParent.SetActive(true);
-
-                // 자식 상태 복원
-                foreach (var kvp in childStates)
-                    kvp.Key.gameObject.SetActive(kvp.Value);
-            }
-            else
-            {
-                chapterParent.SetActive(false);
-            }
+            runner.Despawn(currentChapterInstance);
+            currentChapterInstance = null;
         }
+
+        // ✅ Fusion으로 프리팹 스폰
+        if (chapterId - 1 < chapterPrefabs.Count)
+        {
+            var prefabRef = chapterPrefabs[chapterId - 1];
+            Vector3 spawnPosition = new Vector3(18.4266682f, -3.19088411f, 4.13165569f);
+            currentChapterInstance = runner.Spawn(prefabRef, spawnPosition, Quaternion.identity);
+            Debug.Log($"📦 Chapter {chapterId} spawned over network!");
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ Chapter prefab not assigned for ID {chapterId}");
+        }
+
     }
 
     public void OnBackButtonPressed()
     {
-        if (currentChapterObject != null)
+        if (currentChapterInstance != null)
         {
-            currentChapterObject.SetActive(false);
-            currentChapterObject = null;
-            Debug.Log("Back 버튼: 현재 챕터 오브젝트 비활성화됨");
+            runner.Despawn(currentChapterInstance);
+            currentChapterInstance = null;
+        }
+    }
+
+    public void OnResetButtonPressed()
+    {
+        if (currentChapterInstance != null)
+        {
+            // 기존 오브젝트 Despawn
+            runner.Despawn(currentChapterInstance);
+            currentChapterInstance = null;
+        }
+
+        // 마지막으로 선택된 챕터 ID가 필요함
+        // 선택한 챕터 ID를 저장하는 변수를 추가해야 함
+        if(lastSelectedChapterId <= 0)
+        {
+            Debug.LogWarning("⚠️ Reset할 챕터 ID가 없습니다!");
+            return;
+        }
+
+        // 같은 위치에서 다시 Spawn
+        if(lastSelectedChapterId - 1 < chapterPrefabs.Count)
+        {
+            var prefabRef = chapterPrefabs[lastSelectedChapterId - 1];
+            Vector3 spawnPosition = new Vector3(18.4266682f, -3.19088411f, 4.13165569f);
+            currentChapterInstance = runner.Spawn(prefabRef, spawnPosition, Quaternion.identity);
+            Debug.Log($"🔄 Chapter {lastSelectedChapterId} respawned at {spawnPosition}");
         }
     }
 

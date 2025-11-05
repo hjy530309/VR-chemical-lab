@@ -45,6 +45,15 @@ public class ThermitExperimentProgress : MonoBehaviour
             lastPosition = Progress2_Obj2.transform.position;
     }
 
+    void Awake()
+    {
+        if (checklistManager == null)
+        {
+            checklistManager = FindObjectOfType<ChecklistManager>();
+            if(checklistManager == null)
+                Debug.LogError("ChecklistManager를 찾을 수 없습니다!");
+        }
+    }
     void Update()
     {
         if(!plateMgr.powder.activeSelf)

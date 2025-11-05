@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BottleSmash : MonoBehaviour {
 
+    public AudioSource smashAudio;
     public float respawnDelay = 3f; // 몇 초 후 다시 만들지
     public Transform respawnPoint;
 
@@ -121,6 +122,7 @@ public float shatterAtAcceleration = 50.0f;  // 가속도 임계값
             Glass_Shattered.SetActive(true);
         }
         Effect.Play();
+        smashAudio.Play();
         //the Corks collider needs to be turned on;
 
         //instantiate the splat.

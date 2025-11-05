@@ -6,46 +6,56 @@ using TMPro;
 
 public class MetalObject : NetworkBehaviour
 {
-    public bool InElectrolyte = false;        // ÀüÇØÁú ¾È¿¡ ÀÖ´ÂÁö ¿©ºÎ
-    public float platingProgress = 0f;        // µµ±Ý ÁøÇàµµ (0 ~ 1)
-    public float platingSpeed = 0.2f;         // ÃÊ´ç µµ±Ý ¼Óµµ
-    public PowerSupply powerSupply;          // Àü¿ø ÀåÄ¡ ÂüÁ¶
+    public bool InElectrolyte = false;        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¿ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public float platingProgress = 0f;        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½àµµ (0 ~ 1)
+    public float platingSpeed = 0.2f;         // ï¿½Ê´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½
+    public PowerSupply powerSupply;          // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 
     [SerializeField] private Renderer objectRenderer;
     [SerializeField] private ParticleSystem platingParticles;
 
     [SerializeField] private Color baseColor = Color.gray;
-    [SerializeField] private Color goldColor = new Color(1.0f, 0.84f, 0.0f); // ±Ý»ö
-    [SerializeField] private Color emissionColor = new Color(1.0f, 0.84f, 0.0f); // Emission¿ë »ö»ó
+    [SerializeField] private Color goldColor = new Color(1.0f, 0.84f, 0.0f); // ï¿½Ý»ï¿½
+    [SerializeField] private Color emissionColor = new Color(1.0f, 0.84f, 0.0f); // Emissionï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    [SerializeField] private ElectricCurrentEffect electricEffect;  // Àü¿øÀåÄ¡ ¿¬°á ÀÌÆÑÆ®
+    [SerializeField] private ElectricCurrentEffect electricEffect;  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 
-    [SerializeField] private TMP_Text platingPercentageText;    // µµ±Ý·ü Ç¥½Ã
+    [SerializeField] private TMP_Text platingPercentageText;    // ï¿½ï¿½ï¿½Ý·ï¿½ Ç¥ï¿½ï¿½
 
     private Material _materialInstance;
 
 
-    [SerializeField] private ChecklistManager checklistManager; // ¾À¿¡ ÀÖ´Â ChecklistManager
-    [SerializeField] private int stepId = 3; // DB¿¡¼­ Á¤ÀÇÇÑ ±Ý¼Ó µµ±Ý ´Ü°è ID
-    private bool stepCompleted = false; // Áßº¹ È£Ãâ ¹æÁö
+    [SerializeField] private ChecklistManager checklistManager; // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ChecklistManager
+    [SerializeField] private int stepId = 3; // DBï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ü°ï¿½ ID
+    private bool stepCompleted = false; // ï¿½ßºï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     private void Start()
     {
-        // ·»´õ·¯ ÀÚµ¿ ¿¬°á
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
         if (objectRenderer == null)
             objectRenderer = GetComponentInChildren<Renderer>();
 
-        // ¸ÓÆ¼¸®¾ó ÀÎ½ºÅÏ½ºÈ­ (°øÀ¯ ¸ÓÆ¼¸®¾ó ¿À¿° ¹æÁö)
+        // ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½È­ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         _materialInstance = objectRenderer.material;
         _materialInstance.color = baseColor;
 
-        // Emission ±â´É È°¼ºÈ­
+        // Emission ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
         _materialInstance.EnableKeyword("_EMISSION");
         _materialInstance.SetColor("_EmissionColor", Color.black);
 
-        // ÆÄÆ¼Å¬ ÃÊ±âÈ­
+        // ï¿½ï¿½Æ¼Å¬ ï¿½Ê±ï¿½È­
         if (platingParticles != null)
             platingParticles.Stop();
+    }
+
+    void Awake()
+    {
+        if (checklistManager == null)
+        {
+            checklistManager = FindObjectOfType<ChecklistManager>();
+            if(checklistManager == null)
+                Debug.LogError("ChecklistManagerë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
+        }
     }
 
     private void Update()
@@ -54,29 +64,29 @@ public class MetalObject : NetworkBehaviour
 
         if (shouldPlating)
         {
-            // µµ±Ý ÁøÇà
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             platingProgress += platingSpeed * Time.deltaTime;
             platingProgress = Mathf.Clamp01(platingProgress);
 
-            // »ö»ó º¯È­
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­
             Color currentColor = Color.Lerp(baseColor, goldColor, platingProgress);
             _materialInstance.SetColor("_Color", currentColor);
             _materialInstance.SetColor("_EmissionColor", emissionColor * platingProgress * 2f);
 
-            // ÆÄÆ¼Å¬ Àç»ý
+            // ï¿½ï¿½Æ¼Å¬ ï¿½ï¿½ï¿½
             if (platingParticles != null && !platingParticles.isPlaying)
             {
                 platingParticles.Play();
-                Debug.Log("ÆÄÆ¼Å¬ Àç»ý ½ÃÀÛ");
+                Debug.Log("ï¿½ï¿½Æ¼Å¬ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             }
 
-            // Àü·ù ÀÌÆåÆ® ON
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ON
             if (electricEffect != null)
                 electricEffect.EnableEffect();
         }
         else
         {
-            // ÀüÇØÁú ¹ÛÀÌ°Å³ª ¿Ï·áµÈ °æ¿ì ÆÄÆ¼Å¬/ÀÌÆåÆ® Á¤Áö
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°Å³ï¿½ ï¿½Ï·ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼Å¬/ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
             if (platingParticles != null && platingParticles.isPlaying)
                 platingParticles.Stop();
 
@@ -84,7 +94,7 @@ public class MetalObject : NetworkBehaviour
                 electricEffect.DisableEffect();
         }
 
-        // µµ±Ý ¿Ï·á ½Ã È¿°ú °íÁ¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (platingProgress >= 1f)
         {
             platingProgress = 1f;
@@ -96,7 +106,7 @@ public class MetalObject : NetworkBehaviour
             if (electricEffect != null)
                 electricEffect.DisableEffect();
 
-            // Ã¼Å©¸®½ºÆ® ¿Ï·á È£Ãâ
+            // Ã¼Å©ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ï·ï¿½ È£ï¿½ï¿½
             if (!stepCompleted && checklistManager != null)
             {
                 checklistManager.CompleteStep(stepId);

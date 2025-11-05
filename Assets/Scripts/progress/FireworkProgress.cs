@@ -65,6 +65,16 @@ public class FireworkProgress : MonoBehaviour
         roof.SetActive(false);
     }
 
+    void Awake()
+    {
+        if (checklistManager == null)
+        {
+            checklistManager = FindObjectOfType<ChecklistManager>();
+            if(checklistManager == null)
+                Debug.LogError("ChecklistManager를 찾을 수 없습니다!");
+        }
+    }
+
     void Update()
     {
         // ------------------ 흔들림 감지 ------------------

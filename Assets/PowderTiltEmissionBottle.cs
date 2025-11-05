@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PowderTiltEmissionBottle : MonoBehaviour
 {
+    public AudioSource powderAudio;
     public ParticleSystem powderParticles;
     public Transform bottleTransform;  // 병 게임오브젝트 트랜스폼
     private ParticleSystem.EmissionModule emission;
@@ -26,12 +27,16 @@ public class PowderTiltEmissionBottle : MonoBehaviour
             if (!powderParticles.isPlaying)
                 powderParticles.Play();
             emission.rateOverTime = 500f;
+            if (!powderAudio.isPlaying)
+                powderAudio.Play();
         }
         else
         {
             if (powderParticles.isPlaying)
                 powderParticles.Stop();
             emission.rateOverTime = 0f;
+            if (powderAudio.isPlaying)
+                powderAudio.Stop();
         }
     }
 }

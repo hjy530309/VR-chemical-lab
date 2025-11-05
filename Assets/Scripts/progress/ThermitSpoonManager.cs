@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ThermitSpoonManager : MonoBehaviour
 {
+    public AudioSource spoonAudio;
+    public AudioSource powderAudio;
     public GameObject powder;
     public bool hasPowder = false;
 
@@ -14,6 +16,7 @@ public class ThermitSpoonManager : MonoBehaviour
 
     public void ActivePowder()
     {
+        powderAudio.Play();
         powder.SetActive(true);
         hasPowder = true;
     }
@@ -21,5 +24,16 @@ public class ThermitSpoonManager : MonoBehaviour
     public void InactivePowder()
     {
         powder.SetActive(false);
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        // Floor 레이어에 부딪혔는지 확인
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Floor"))
+        {
+            if (spoonAudio != null && !spoonAudio.isPlaying)
+            {
+                spoonAudio.Play();
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PourLiquid : MonoBehaviour {
+    public AudioSource pouringAudio;
 
 	// Use this for initialization
     //how quickly it takes to empty
@@ -22,6 +23,12 @@ public class PourLiquid : MonoBehaviour {
             {
                 corkRB = smashScript.Cork.GetComponent<Rigidbody>();
             }
+        }
+
+        if(pouringAudio != null) {
+            pouringAudio.loop = true;
+            pouringAudio.volume = 0f;
+            pouringAudio.Play(); // 한 번만 재생
         }
 	}
 	
@@ -66,6 +73,10 @@ public class PourLiquid : MonoBehaviour {
             else
             {
                 pouringParticleSystem.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+            }
+
+            if(pouringAudio != null) {
+                pouringAudio.volume = Mathf.Clamp01(particleVal); // 0이면 사실상 소리 없음
             }
         }
 		

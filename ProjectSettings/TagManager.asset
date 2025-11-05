@@ -13,6 +13,7 @@ TagManager:
   - Neutron
   - FuelPellet
   - Chamber
+  - Potion
   layers:
   - Default
   - TransparentFX
@@ -30,7 +31,7 @@ TagManager:
   - 
   - FireworkGem
   - FireworkSetting
-  - 
+  - Desk
   - 
   - 
   - 

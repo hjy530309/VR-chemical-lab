@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpoonManager : MonoBehaviour
 {
+    public AudioSource spoonAudio;
+    public AudioSource powderAudio;
     public GameObject liquid;
     public GameObject powder;
     public bool hasPowder = false;
@@ -23,6 +25,7 @@ public class SpoonManager : MonoBehaviour
 
     public void ActivePowder()
     {
+        powderAudio.Play();
         powder.SetActive(true);
         hasPowder = true;
     }
@@ -31,4 +34,17 @@ public class SpoonManager : MonoBehaviour
     {
         powder.SetActive(false);
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Floor 레이어에 부딪혔는지 확인
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Floor"))
+        {
+            if (spoonAudio != null && !spoonAudio.isPlaying)
+            {
+                spoonAudio.Play();
+            }
+        }
+    }
+
 }

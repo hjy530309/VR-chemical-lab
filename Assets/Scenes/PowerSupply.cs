@@ -4,15 +4,15 @@ public class PowerSupply : MonoBehaviour
 {
     public bool IsPoweredOn = false;
 
-    [SerializeField] private GameObject switchVisual; // ½Ã°¢ÀûÀ¸·Î ¿òÁ÷ÀÏ ½ºÀ§Ä¡
+    [SerializeField] private GameObject switchVisual; // ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡
     [SerializeField] private Material onMaterial;
     [SerializeField] private Material offMaterial;
 
     private Renderer _renderer;
 
-    // ChecklistManager ÂüÁ¶ (¾À¿¡ ÀÖ´Â °Í)
+    // ChecklistManager ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½)
     [SerializeField] private ChecklistManager checklistManager;
-    [SerializeField] private int stepId =1; // DB ´Ü°è ID
+    [SerializeField] private int stepId =1; // DB ï¿½Ü°ï¿½ ID
 
     private void Start()
     {
@@ -22,13 +22,23 @@ public class PowerSupply : MonoBehaviour
         UpdateVisual();
     }
 
+    void Awake()
+    {
+        if (checklistManager == null)
+        {
+            checklistManager = FindObjectOfType<ChecklistManager>();
+            if(checklistManager == null)
+                Debug.LogError("ChecklistManagerë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤!");
+        }
+    }
+
     public void TogglePower()
     {
         IsPoweredOn = !IsPoweredOn;
-        Debug.Log("Àü¿ø »óÅÂ: " + (IsPoweredOn ? "ON" : "OFF"));
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + (IsPoweredOn ? "ON" : "OFF"));
         UpdateVisual();
 
-        // Àü¿ø ÄÑÁ³À» ¶§ Ã¼Å©¸®½ºÆ® ¿Ï·á
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã¼Å©ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ï·ï¿½
         if (IsPoweredOn && checklistManager != null)
         {
             checklistManager.CompleteStep(stepId);
@@ -44,22 +54,22 @@ public class PowerSupply : MonoBehaviour
 
         if (switchVisual != null)
         {
-            // ½ºÀ§Ä¡¸¦ È¸Àü½ÃÄÑ¼­ »óÅÂ Ç¥½Ã (¿¹: À§ = ON, ¾Æ·¡ = OFF)
+            // ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ (ï¿½ï¿½: ï¿½ï¿½ = ON, ï¿½Æ·ï¿½ = OFF)
             //float angle = IsPoweredOn ? -30f : 30f;
             //switchVisual.transform.localRotation = Quaternion.Euler(angle, 0, 0);
         }
     }
 
-    private void OnMouseDown() // PC Å×½ºÆ®¿ë ¸¶¿ì½º Å¬¸¯
+    private void OnMouseDown() // PC ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ì½º Å¬ï¿½ï¿½
     {
         TogglePower();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!IsPoweredOn) // ÀÌ¹Ì ÄÑÁ³À¸¸é ¹«½Ã
+        if (!IsPoweredOn) // ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
-            Debug.Log("½ºÀ§Ä¡¿¡ ¹«¾ğ°¡ ´êÀ½: " + other.name);
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + other.name);
             TogglePower();
         }
     }
