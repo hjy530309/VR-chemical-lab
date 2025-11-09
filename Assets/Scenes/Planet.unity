@@ -7053,6 +7053,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.854589, y: 1.3188877, z: 1.5956445}
   m_Center: {x: 0.0019479394, y: 0.65944374, z: 0}
+--- !u!114 &532388806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532388797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 1726588086
+  ObjectInterest: 0
+  Flags: 264705
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &535583253
 GameObject:
   m_ObjectHideFlags: 0
@@ -12151,7 +12169,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
   m_LocalPosition: {x: -3.04, y: 1.57, z: -1.34}
-  m_LocalScale: {x: 0.37499997, y: 0.37499997, z: 0.37499997}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1008932733}
@@ -25677,6 +25695,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1444947010}
   - component: {fileID: 1444947011}
+  - component: {fileID: 1444947012}
   m_Layer: 0
   m_Name: Spot Light
   m_TagString: Untagged
@@ -25761,6 +25780,24 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1444947012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1444947009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 2461394867
+  ObjectInterest: 0
+  Flags: 264705
+  NestedObjects: []
+  NetworkedBehaviours: []
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &1454975532
 GameObject:
   m_ObjectHideFlags: 0
@@ -36536,6 +36573,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e4f50880ac0e614b82cb7790aaffcf2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 532388805}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2e4f50880ac0e614b82cb7790aaffcf2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 532388806}
   m_SourcePrefab: {fileID: 100100000, guid: 2e4f50880ac0e614b82cb7790aaffcf2, type: 3}
 --- !u!1 &1855204172
 GameObject:

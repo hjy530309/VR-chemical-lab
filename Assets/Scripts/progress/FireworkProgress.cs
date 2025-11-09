@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
@@ -53,6 +54,9 @@ public class FireworkProgress : MonoBehaviour
     private bool isFirst = true;
     private object currentChapterId;
 
+    public AudioSource starAudio;
+    public AudioSource torchAudio;
+
     void Start()
     {
         lastPosition = Progress2_Obj1.transform.position;
@@ -62,7 +66,24 @@ public class FireworkProgress : MonoBehaviour
         Progress5_Obj3.SetActive(false);
         FireworkProduct.SetActive(false);
         TorchParticle.Stop();
-        roof.SetActive(false);
+        
+        GameObject labMap = GameObject.Find("LabMap");
+
+        if (labMap == null)
+        {
+            Debug.LogWarning("씬에서 LabMap을 찾을 수 없습니다!");
+            return;
+        }
+
+        // LabMap 하위에서 이름이 "roof"인 객체 찾기 (비활성 포함)
+        roof = labMap.GetComponentsInChildren<Transform>(true)
+                     .FirstOrDefault(t => t.name == "roof")?.gameObject;
+
+        if (roof != null)
+        {
+            roof.SetActive(false);
+            Debug.Log("roof를 찾아 비활성화했습니다.");
+        }
     }
 
     void Awake()
@@ -197,6 +218,7 @@ public class FireworkProgress : MonoBehaviour
                         shellMgr.ActiveCircle();
                     }
 
+                    starAudio.Play();
                     nowProcess++;
                     checklistManager.CompleteStep(stepId);
                     stepId++;
@@ -322,6 +344,7 @@ public class FireworkProgress : MonoBehaviour
         if(item.name == "Torch")
         {
             TorchParticle.Play();
+            torchAudio.Play();
         }
         switch(item.name)
         {
@@ -336,6 +359,7 @@ public class FireworkProgress : MonoBehaviour
         if(item.name == "Torch")
         {
             TorchParticle.Stop();
+            torchAudio.Stop();
         }
     }
 

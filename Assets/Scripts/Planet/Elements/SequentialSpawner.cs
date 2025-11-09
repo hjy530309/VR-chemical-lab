@@ -75,32 +75,44 @@ public class SequentialSpawner : MonoBehaviour
         }
     }
 
-
     private void SpawnNewElement()
     {
         if (elementMgr.GetElementCount(elementName) <= 0 || runner == null || objectPrefab == null)
             return;
-            
-        elementMgr.RemoveElement(elementName, 1);
-        PlayerRef localPlayer = runner.LocalPlayer;
 
-        // 월드 좌표는 Spawn 위치로 임시 지정 (0,0,0이어도 괜찮음)
+        // 호스트면 직접 Spawn
+        if (runner.IsServer)
+        {
+            DoSpawn(runner.LocalPlayer);
+        }
+        else
+        {
+            // 클라이언트면 요청 RPC
+            RequestSpawn(runner.LocalPlayer);
+        }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RequestSpawn(PlayerRef requester, RpcInfo info = default)
+    {
+        DoSpawn(requester);
+    }
+
+    private void DoSpawn(PlayerRef owner)
+    {
+        elementMgr.RemoveElement(elementName, 1);
+
         NetworkObject netObj = runner.Spawn(
             objectPrefab,
-            defaultPosition.position, // 월드 좌표, 임시
+            defaultPosition.position,
             defaultPosition.rotation,
-            localPlayer
+            owner
         );
 
         if (netObj != null)
         {
-            // 부모에 붙이면서 로컬 좌표를 0,0,0으로 설정
-            netObj.transform.SetParent(defaultPosition, false);
-            netObj.transform.localPosition = Vector3.zero;
-            netObj.transform.localRotation = Quaternion.identity;
-
             spawnedObjects.Add(netObj.gameObject);
-            Debug.Log("Spawned as child at local 0,0,0: " + netObj.name);
+            Debug.Log($"Spawned by {owner}: {netObj.name}");
         }
         else
         {

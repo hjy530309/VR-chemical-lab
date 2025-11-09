@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class FireworkScoopManager : MonoBehaviour
 {
+    public AudioSource spoonAudio;
+    public AudioSource powderAudio1;
+    public AudioSource powderAudio2;
     public GameObject gunpowder;
     public GameObject sawdustpowder;
     public bool hasPowder = false;
@@ -19,6 +22,7 @@ public class FireworkScoopManager : MonoBehaviour
     public void ActiveGunPowder()
     {
         InactiveSawdustPowder();
+        powderAudio1.Play();
         gunpowder.SetActive(true);
         hasPowder = true;
         isGunPowder = true;
@@ -33,6 +37,7 @@ public class FireworkScoopManager : MonoBehaviour
     public void ActiveSawdustPowder()
     {
         InactiveGunPowder();
+        powderAudio2.Play();
         sawdustpowder.SetActive(true);
         hasPowder = true;
         isGunPowder = false;
@@ -42,5 +47,17 @@ public class FireworkScoopManager : MonoBehaviour
     public void InactiveSawdustPowder()
     {
         sawdustpowder.SetActive(false);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Floor 레이어에 부딪혔는지 확인
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Floor"))
+        {
+            if (spoonAudio != null && !spoonAudio.isPlaying)
+            {
+                spoonAudio.Play();
+            }
+        }
     }
 }
