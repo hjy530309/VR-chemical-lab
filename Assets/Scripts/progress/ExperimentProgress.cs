@@ -21,22 +21,6 @@ public class ExperimentProgress : MonoBehaviour
     public GameObject Progress3_Obj1;
     public GameObject Progress3_Obj2;
 
-    // void Update(){
-    //     LiquidVolumeAnimator P1O2 = Progress1_Obj2.GetComponentInChildren<LiquidVolumeAnimator>();
-    //     if((P1O2.level > 0.2f || P1O2.level < 0.1f) && nowProcess >= 2 && prevSuccess == true)
-    //     {
-    //         prevProcess = nowProcess;
-    //         nowProcess = 1;
-    //     }else
-    //     {
-    //         prevSuccess = false;
-    //     }
-    //     if(!(P1O2.level > 0.2f || P1O2.level < 0.1f) && (prevSuccess == false))
-    //     {
-    //         prevSuccess = true;
-    //         nowProcess = prevProcess;
-    //     }
-    // }
     public Color newTopColor = Color.green;
     public Renderer targetRenderer;
     private MaterialPropertyBlock mpb;

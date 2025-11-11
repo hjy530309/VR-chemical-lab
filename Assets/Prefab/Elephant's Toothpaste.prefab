@@ -6889,6 +6889,7 @@ MonoBehaviour:
   authorityText: {fileID: 4526050040644822911}
   debugText: {fileID: 5929061377389866232}
   progressManager: {fileID: 8594485866972791037}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &5489006980910254919
 MonoBehaviour:
@@ -7655,6 +7656,7 @@ MonoBehaviour:
   authorityText: {fileID: 4109400453091543856}
   debugText: {fileID: 6160931507546390711}
   progressManager: {fileID: 8594485866972791037}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &5468664883636905736
 MonoBehaviour:
@@ -25043,6 +25045,7 @@ MonoBehaviour:
   authorityText: {fileID: 7536789308652461305}
   debugText: {fileID: 8548158268735204037}
   progressManager: {fileID: 8594485866972791037}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &7800919763335402956
 MonoBehaviour:
@@ -25173,6 +25176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9595bd8a6648b72478d69bc5182430eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pouringAudio: {fileID: 0}
   rateOfFlow: 1
   smashScript: {fileID: 0}
   liquid: {fileID: 563943542573469607}
@@ -25191,6 +25195,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a02fdfca4828d46478f3f6b3546d0495, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spoonAudio: {fileID: 0}
+  powderAudio: {fileID: 0}
   liquid: {fileID: 2609275708200070650}
   powder: {fileID: 5412562672518067624}
   hasPowder: 0
@@ -26220,6 +26226,7 @@ MonoBehaviour:
   authorityText: {fileID: 9033588575596870538}
   debugText: {fileID: 3027623456907499212}
   progressManager: {fileID: 8594485866972791037}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &2208780514432117717
 MonoBehaviour:
@@ -26350,6 +26357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9595bd8a6648b72478d69bc5182430eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pouringAudio: {fileID: 0}
   rateOfFlow: 0.01
   smashScript: {fileID: 963068670466545687}
   liquid: {fileID: 2664142956850769389}
@@ -26368,6 +26376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaf538c07796e5745a75c30bc3ec6117, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  smashAudio: {fileID: 0}
   respawnDelay: 3
   respawnPoint: {fileID: 1292833888464518137}
   color: {r: 1, g: 0, b: 0, a: 1}
@@ -41804,6 +41813,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2da6ea99214b9241bd5a51de4e94f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  feedbackManager: {fileID: 0}
+  checklistManager: {fileID: 0}
+  stepId: 1
   nowProcess: 1
   prevSuccess: 1
   BubbleParticles: {fileID: 4679394948910480554}
@@ -41821,6 +41833,7 @@ MonoBehaviour:
   smashParticle: {fileID: 3981913895400420508}
   smashParticleColor1: {r: 1, g: 0, b: 0, a: 1}
   smashParticleColor2: {r: 1, g: 0.5, b: 0, a: 1}
+  resultAudio: {fileID: 0}
 --- !u!1 &5892347404884411973
 GameObject:
   m_ObjectHideFlags: 0
@@ -43270,6 +43283,7 @@ MonoBehaviour:
   authorityText: {fileID: 4171524687981015895}
   debugText: {fileID: 4420880134950216226}
   progressManager: {fileID: 8594485866972791037}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &195096279994947184
 MonoBehaviour:
@@ -43400,6 +43414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9595bd8a6648b72478d69bc5182430eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pouringAudio: {fileID: 0}
   rateOfFlow: 0.1
   smashScript: {fileID: 0}
   liquid: {fileID: 341531534878939269}

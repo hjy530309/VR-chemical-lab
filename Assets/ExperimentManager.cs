@@ -44,7 +44,7 @@ public class ExperimentManager : MonoBehaviour
     private int lastSelectedChapterId = 0;
 
     private Dictionary<GameObject, Dictionary<Transform, bool>> chapterChildStates = new Dictionary<GameObject, Dictionary<Transform, bool>>();
-
+    public SpawnExperimentObjects spawnObject;
     void Awake()
     {
         // ChecklistManager�� Canvas �ֻ����� ����
@@ -60,6 +60,7 @@ public class ExperimentManager : MonoBehaviour
             yield break;
         }
 
+        spawnObject.StartSpawnCoroutine();
         ShowStartPanel();
         yield return LoadChaptersFromServer();
     }
@@ -90,6 +91,8 @@ public class ExperimentManager : MonoBehaviour
         //조수한테 챕터의 물건 찾을수있게함
         highlighter.SetGptChapter(chapterId);
 
+        spawnObject.DespawnObjects();
+
         // 🔄 기존 인스턴스 제거
         if (currentChapterInstance != null)
         {
@@ -101,7 +104,7 @@ public class ExperimentManager : MonoBehaviour
         if (chapterId - 1 < chapterPrefabs.Count)
         {
             var prefabRef = chapterPrefabs[chapterId - 1];
-            Vector3 spawnPosition = new Vector3(18.4266682f, -3.19088411f, 4.13165569f);
+            Vector3 spawnPosition = new Vector3(0,0,0);
             currentChapterInstance = runner.Spawn(prefabRef, spawnPosition, Quaternion.identity);
             Debug.Log($"📦 Chapter {chapterId} spawned over network!");
         }
