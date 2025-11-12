@@ -37,7 +37,7 @@ public class SpawnExperimentObjects : MonoBehaviour
         SpawnObjects();
     }
 
-    private void SpawnObjects()
+    public void SpawnObjects()
     {
         DespawnObjects();
 

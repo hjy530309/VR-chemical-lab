@@ -29,6 +29,7 @@ public class ExperimentProgress : MonoBehaviour
     public float shakeSensitivity = 1f; // 흔들림 감도
     private Vector3 lastPosition;
 
+    public ParticleSystem pouringParticle;
     public ParticleSystem smashParticle; // 깨지는 파티클
     public Color smashParticleColor1 = new Color(1f, 0f, 0f, 1f);
     public Color smashParticleColor2 = new Color(1f, 0.5f, 0f);
@@ -163,6 +164,17 @@ public class ExperimentProgress : MonoBehaviour
                         if (smashParticle == null) return;
                         var main = smashParticle.main;
                         main.startColor = smashParticleColor2;
+
+                        if (pouringParticle != null)
+                        {
+                            ParticleSystemRenderer pourRenderer = pouringParticle.GetComponent<ParticleSystemRenderer>();
+                            if (pourRenderer != null)
+                            {
+                                Material pourMat = pourRenderer.material; // 개별 인스턴스 생성
+                                if (pourMat != null)
+                                    pourMat.color = new Color(255f / 255f, 150f / 255f, 64f / 255f);
+                            }
+                        }
 
                         if (instantiatedMaterial != null)
                         {

@@ -841,6 +841,43 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &884587249768570257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3125461900721031161}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3125461900721031161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 884587249768570257}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 18.45, y: -3.132, z: 4.151}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6361605013380036173}
+  - {fileID: 4198028092278063656}
+  - {fileID: 2686058484916458627}
+  - {fileID: 3059546599176380886}
+  - {fileID: 7159090491545676687}
+  - {fileID: 5654808577099180895}
+  m_Father: {fileID: 6902747192752640556}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1042140741215602255
 GameObject:
   m_ObjectHideFlags: 0
@@ -1114,6 +1151,7 @@ MonoBehaviour:
   authorityText: {fileID: 7561404680904349849}
   debugText: {fileID: 4977883388944518791}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &122397158208902637
 MonoBehaviour:
@@ -1244,6 +1282,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32882af7abf600446a308af031750259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spoonAudio: {fileID: 0}
+  powderAudio: {fileID: 0}
   powder: {fileID: 2028727835664284928}
   hasPowder: 0
 --- !u!1 &1478186583780439541
@@ -1420,12 +1460,7 @@ Transform:
   - {fileID: 5812566136442556852}
   - {fileID: 2996995068099907384}
   - {fileID: 8247477476746879257}
-  - {fileID: 6361605013380036173}
-  - {fileID: 4198028092278063656}
-  - {fileID: 2686058484916458627}
-  - {fileID: 3059546599176380886}
-  - {fileID: 7159090491545676687}
-  - {fileID: 5654808577099180895}
+  - {fileID: 3125461900721031161}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1614162322388178590
@@ -6493,6 +6528,7 @@ MonoBehaviour:
   authorityText: {fileID: 7357065840142364158}
   debugText: {fileID: 3372587722593211726}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &2361119109538816533
 MonoBehaviour:
@@ -6623,6 +6659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0adc142f69c11341a3ab639b2eb27bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powderAudio: {fileID: 0}
   powderParticles: {fileID: 3925630951064527836}
   bottleTransform: {fileID: 3812092792416267649}
   tiltThreshold: 30
@@ -12187,6 +12224,7 @@ MonoBehaviour:
   authorityText: {fileID: 2065786518815267735}
   debugText: {fileID: 7207999924435336039}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &7996682885073787389
 MonoBehaviour:
@@ -12317,6 +12355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0adc142f69c11341a3ab639b2eb27bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powderAudio: {fileID: 0}
   powderParticles: {fileID: 5262255536268421799}
   bottleTransform: {fileID: 780240866333031485}
   tiltThreshold: 30
@@ -12655,6 +12694,7 @@ MonoBehaviour:
   authorityText: {fileID: 3699199594753560840}
   debugText: {fileID: 3582448812246426487}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &4256670200586264174
 MonoBehaviour:
@@ -12785,6 +12825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0adc142f69c11341a3ab639b2eb27bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powderAudio: {fileID: 0}
   powderParticles: {fileID: 4025946616818287583}
   bottleTransform: {fileID: 2996995068099907384}
   tiltThreshold: 30
@@ -12800,6 +12841,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6cbae5b0786bc7458d823b109232377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powderParticles: {fileID: 0}
   powder: {fileID: 2891276076528490719}
   ribbon: {fileID: 6361605013380036172}
   plateRibbon: {fileID: 8933749828114637367}
@@ -12810,6 +12852,8 @@ MonoBehaviour:
   maxScaleObj1: 0.1
   maxScaleObj2: 0.04
   duration: 3
+  minY: 0.125
+  maxY: 0.28
 --- !u!114 &5886827367011886345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20526,6 +20570,7 @@ MonoBehaviour:
   authorityText: {fileID: 9091654780456122852}
   debugText: {fileID: 381083025634944038}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &6692708698938923095
 MonoBehaviour:
@@ -20884,6 +20929,7 @@ MonoBehaviour:
   authorityText: {fileID: 5064485036695588337}
   debugText: {fileID: 1688790084232014512}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &8082023262849396518
 MonoBehaviour:
@@ -21652,6 +21698,7 @@ MonoBehaviour:
   authorityText: {fileID: 2109649746171117050}
   debugText: {fileID: 5234371972777966793}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &7025034519295702882
 MonoBehaviour:
@@ -27415,6 +27462,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67830c19718b6fb429c9fc48d6562176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  feedbackManager: {fileID: 0}
+  checklistManager: {fileID: 0}
+  stepId: 1
   nowProcess: 1
   spoonMgr: {fileID: 5963364961725523285}
   plateMgr: {fileID: 1833352075393378456}
@@ -27942,7 +27992,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6902747192752640556}
+    m_TransformParent: {fileID: 3125461900721031161}
     m_Modifications:
     - target: {fileID: 2129220863, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: ghostMetarial
@@ -28062,7 +28112,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.424
+      value: -0.4239998
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.y
@@ -28070,7 +28120,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.347
+      value: 1.3470001
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -28236,6 +28286,7 @@ MonoBehaviour:
   authorityText: {fileID: 1665075346253611814}
   debugText: {fileID: 8907005520925968545}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!65 &7727186193384933832
 BoxCollider:
@@ -28554,7 +28605,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6902747192752640556}
+    m_TransformParent: {fileID: 3125461900721031161}
     m_Modifications:
     - target: {fileID: 2129220863, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: ghostMetarial
@@ -28694,15 +28745,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6
+      value: -0.6000004
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.091
+      value: -0.09100008
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.87
+      value: 0.8699999
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -28847,6 +28898,7 @@ MonoBehaviour:
   authorityText: {fileID: 0}
   debugText: {fileID: 0}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &8859215717479535081
 MonoBehaviour:
@@ -28860,6 +28912,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900bf9d2fd4f4c54e89a4ea800f2670d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ironAudio: {fileID: 0}
   explosionForce: 50
   explosionRadius: 5
   explosionTarget: {fileID: 2996995068099907384}
@@ -28885,7 +28938,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6902747192752640556}
+    m_TransformParent: {fileID: 3125461900721031161}
     m_Modifications:
     - target: {fileID: 2129220863, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: ghostMetarial
@@ -29029,11 +29082,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6030003
+      value: -0.60300064
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.07299994
+      value: -0.072999954
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -29183,6 +29236,7 @@ MonoBehaviour:
   authorityText: {fileID: 0}
   debugText: {fileID: 0}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &5086108562517763592
 MonoBehaviour:
@@ -29196,6 +29250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900bf9d2fd4f4c54e89a4ea800f2670d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ironAudio: {fileID: 0}
   explosionForce: 50
   explosionRadius: 5
   explosionTarget: {fileID: 2996995068099907384}
@@ -29533,7 +29588,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6902747192752640556}
+    m_TransformParent: {fileID: 3125461900721031161}
     m_Modifications:
     - target: {fileID: 2129220863, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: ghostMetarial
@@ -29673,15 +29728,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6020003
+      value: -0.60200024
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.08799994
+      value: -0.08799982
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.88199985
+      value: 0.88199997
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -29823,6 +29878,7 @@ MonoBehaviour:
   authorityText: {fileID: 0}
   debugText: {fileID: 0}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &8372604208543702871
 MonoBehaviour:
@@ -29836,6 +29892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 900bf9d2fd4f4c54e89a4ea800f2670d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ironAudio: {fileID: 0}
   explosionForce: 50
   explosionRadius: 5
   explosionTarget: {fileID: 2996995068099907384}
@@ -29943,7 +30000,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6902747192752640556}
+    m_TransformParent: {fileID: 3125461900721031161}
     m_Modifications:
     - target: {fileID: 2129220863, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: ghostMetarial
@@ -30071,7 +30128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.209
+      value: -0.20899963
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.y
@@ -30079,7 +30136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.143
+      value: 1.1430001
       objectReference: {fileID: 0}
     - target: {fileID: 3616975863809003729, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -30238,6 +30295,7 @@ MonoBehaviour:
   authorityText: {fileID: 8435553778097272643}
   debugText: {fileID: 1843828323444620484}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!4 &6361605013380036173 stripped
 Transform:
@@ -30261,7 +30319,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 6902747192752640556}
+    m_TransformParent: {fileID: 3125461900721031161}
     m_Modifications:
     - target: {fileID: 2129220863, guid: 8fbd4b76d84610b48b0d0cb4222817dd, type: 3}
       propertyPath: ghostMetarial
@@ -30565,6 +30623,7 @@ MonoBehaviour:
   authorityText: {fileID: 7142716752470305361}
   debugText: {fileID: 1128015822559650262}
   progressManager: {fileID: 0}
+  planetProgress: {fileID: 0}
   nowObj: {fileID: 0}
 --- !u!114 &2181073239492336551
 MonoBehaviour:

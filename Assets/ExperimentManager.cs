@@ -42,6 +42,7 @@ public class ExperimentManager : MonoBehaviour
     public NetworkRunner runner;
 
     private int lastSelectedChapterId = 0;
+    private bool isChapter = false;
 
     private Dictionary<GameObject, Dictionary<Transform, bool>> chapterChildStates = new Dictionary<GameObject, Dictionary<Transform, bool>>();
     public SpawnExperimentObjects spawnObject;
@@ -81,6 +82,7 @@ public class ExperimentManager : MonoBehaviour
 
     void OnChapterSelected(int chapterId)
     {
+        isChapter = true;
         Debug.Log("선택한 챕터 ID: " + chapterId);
         lastSelectedChapterId = chapterId;
         chapterPanel.SetActive(false);
@@ -121,6 +123,8 @@ public class ExperimentManager : MonoBehaviour
         {
             runner.Despawn(currentChapterInstance);
             currentChapterInstance = null;
+            spawnObject.SpawnObjects();
+            isChapter = false;
         }
     }
 
@@ -135,9 +139,9 @@ public class ExperimentManager : MonoBehaviour
 
         // 마지막으로 선택된 챕터 ID가 필요함
         // 선택한 챕터 ID를 저장하는 변수를 추가해야 함
-        if(lastSelectedChapterId <= 0)
+        if(lastSelectedChapterId <= 0 || isChapter == false)
         {
-            Debug.LogWarning("⚠️ Reset할 챕터 ID가 없습니다!");
+            spawnObject.SpawnObjects();
             return;
         }
 
@@ -145,7 +149,7 @@ public class ExperimentManager : MonoBehaviour
         if(lastSelectedChapterId - 1 < chapterPrefabs.Count)
         {
             var prefabRef = chapterPrefabs[lastSelectedChapterId - 1];
-            Vector3 spawnPosition = new Vector3(18.4266682f, -3.19088411f, 4.13165569f);
+            Vector3 spawnPosition = new Vector3(0, 0, 0);
             currentChapterInstance = runner.Spawn(prefabRef, spawnPosition, Quaternion.identity);
             Debug.Log($"🔄 Chapter {lastSelectedChapterId} respawned at {spawnPosition}");
         }
