@@ -1738,7 +1738,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pouringAudio: {fileID: 8161463140398435348}
   rateOfFlow: 0.1
-  smashScript: {fileID: 0}
+  smashScript: {fileID: 6223018260524128509}
   liquid: {fileID: 6898466684562413679}
   controllingTransform: {fileID: 436556449288649644}
   pouringParticleSystem: {fileID: 2087864770677478750}

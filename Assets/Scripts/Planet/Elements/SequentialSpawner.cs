@@ -11,6 +11,7 @@ public class SequentialSpawner : MonoBehaviour
     public string elementName;              // 원소 이름
     public ElementCounter elementMgr;       // 원소 관리 매니저
     public float maxDistance = 1f;          // 마지막 클론이 벗어나야 새로 스폰
+    public AudioSource spawnAudio;
 
     [Header("Network Runner")]
     public NetworkRunner runner;            // Inspector에서 연결
@@ -100,6 +101,7 @@ public class SequentialSpawner : MonoBehaviour
 
     private void DoSpawn(PlayerRef owner)
     {
+        spawnAudio.Play();
         elementMgr.RemoveElement(elementName, 1);
 
         NetworkObject netObj = runner.Spawn(

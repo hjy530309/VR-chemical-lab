@@ -49,28 +49,24 @@ public class ChatGptManager : MonoBehaviour
                 Role = "system",
                 Content = @"
             You are a chemistry lab assistant.
-            Always respond only in JSON format.
-            The JSON structure should be as follows:
+            Always respond ONLY in valid JSON format with no extra text.
 
+            JSON format:
             {
-                ""reply"": ""The message to show the user"",
-                ""action"": {
-                    ""type"": ""highlight"",
-                    ""target"": ""The item to highlight""
-                }
+            ""reply"": ""Text to show the user"",
+            ""action"": {
+                ""type"": ""highlight"",
+                ""target"": ""ObjectName""
+            }
             }
 
-            If there is nothing to highlight, ""action"" can be null or omitted.
-
-            When the user asks where an item is, always include an ""action"" field like this:
-
-            {
-            ""reply"": ""The {item} is over there! I'll make it sparkle for you 🧪"",
-            ""action"": { ""type"": ""highlight"", ""target"": ""{item}"" }
-            }
-
-            If the user asks a general question:
-            You answer appropriately to the situation.
+            Rules:
+            - If the user asks WHERE something is, ALWAYS include an ""action"" object.
+            - When the user says ""hydrogen"", it refers to the lab item with object name ""Bottle"".
+            - The reply should describe the location in natural English.
+            - ""action.target"" must always be the correct Unity object name (e.g., ""Bottle"").
+            - If the question is NOT about location, reply normally but still in valid JSON.
+            - Do NOT add explanations, comments, or text outside JSON.
             "
             };
 
@@ -115,8 +111,33 @@ public class ChatGptManager : MonoBehaviour
                     // JSON에 highlight 액션이 있으면 실행
                     if (wrapper.action != null && wrapper.action.type == "highlight")
                     {
-                        ObjectHighlighter.Instance.HighlightItem(wrapper.action.target);
+                        // GPT가 준 target 가져오기
+                        string gptTarget = wrapper.action.target?.Trim();
+
+                        if (!string.IsNullOrEmpty(gptTarget))
+                        {
+                            // GPT target → Unity 오브젝트 이름으로 매핑
+                            foreach (var key in ObjectHighlighter.Instance.ItemMap.Keys)
+                            {
+                                if (key.ToLower() == gptTarget.ToLower())
+                                {
+                                    gptTarget = ObjectHighlighter.Instance.ItemMap[key]; // 실제 오브젝트 이름
+                                    break;
+                                }
+                            }
+
+                            // highlight 실행
+                            ObjectHighlighter.Instance.HighlightItem(gptTarget);
+
+                            // locationMap에서 위치 가져오기
+                            if (ObjectHighlighter.Instance.locationMap.TryGetValue(gptTarget, out string locationText))
+                            {
+                                wrapper.reply = locationText; // GPT reply 덮어쓰기
+                                Debug.Log("디버깅중임 " + gptTarget);
+                            }
+                        }
                     }
+
 
                     // GPT 답변 표시
                     OnResponse.Invoke(wrapper.reply);

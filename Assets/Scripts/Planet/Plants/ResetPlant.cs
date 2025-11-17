@@ -10,9 +10,11 @@ public class ResetPlant : MonoBehaviour
     public SpawnSeed seed;
     public Slider growSlider;
     public Slider lightSlider;
+    public AudioSource buttonAudio;
 
     public void PlantProgressReset()
     {
+        buttonAudio.Play();
         dirt_pile.SetActive(false);
         
         plantGrow.hasLight = false;

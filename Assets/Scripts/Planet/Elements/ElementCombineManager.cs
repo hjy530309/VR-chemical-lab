@@ -21,6 +21,8 @@ public class Ingredient
 
 public class ElementCombineManager : MonoBehaviour
 {
+    public AudioSource successAudio;
+
     [Header("Recipe Settings")]
     public List<Recipe> recipes;
 
@@ -89,6 +91,7 @@ public class ElementCombineManager : MonoBehaviour
 
                 if (newObj != null)
                 {
+                    successAudio.Play();
                     Debug.Log($"{recipe.name} 합성 성공! (Fusion Spawn)");
                 }
                 else

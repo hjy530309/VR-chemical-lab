@@ -34,6 +34,10 @@ public class ThermitExperimentProgress : MonoBehaviour
     private bool notCall = true;
     private int prevProcess = -1;
     private bool checkOne = false;
+    private bool step6Done = false;
+
+    public AudioSource fireAudio;
+    public AudioSource boomAudio;
 
     void Start()
     {
@@ -117,8 +121,11 @@ public class ThermitExperimentProgress : MonoBehaviour
 
             lastPosition = currentPosition;
         }
-        if(nowProcess == 6)
+        if(nowProcess == 6 && !step6Done)
         {
+            step6Done = true;
+            fireAudio.Stop();
+            boomAudio.Play();
             plateMgr.HidePlateRibbon();
             plateMgr.InactivePowder();
             result1.SetActive(true);
@@ -248,14 +255,17 @@ public class ThermitExperimentProgress : MonoBehaviour
                 {
                     if(targetObj.name =="Plate")
                     {
+                        if (!notCall) return;  // 🔥 추가: 한 번만 실행되도록 차단
+
+                        notCall = false;  // 🔥 콜백 전에 막아버린다
+
+                        fireAudio.Play();
+
                         StartCoroutine(plateMgr.MoveFireCoroutine(() =>
                         {
-                            if(notCall){
-                                nowProcess++;
-                                notCall = false;
-                                checklistManager.CompleteStep(stepId);
-                                stepId++;
-                            }
+                            nowProcess++;
+                            checklistManager.CompleteStep(stepId);
+                            stepId++;
                         }));
 
                     }

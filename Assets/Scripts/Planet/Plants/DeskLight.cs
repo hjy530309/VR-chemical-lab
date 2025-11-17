@@ -10,6 +10,7 @@ public class DeskLight : MonoBehaviour
     public Image backgroundImage;
     public Color backgroundColor = Color.blue;
     public PlantGrow plant;
+    public AudioSource clickAudio;
 
     void Start()
     {
@@ -23,6 +24,7 @@ public class DeskLight : MonoBehaviour
     // Update is called once per frame
     public void showLight()
     {
+        clickAudio.Play();
         if(backgroundImage != null)
         {
             backgroundImage.color = backgroundColor;
@@ -32,6 +34,7 @@ public class DeskLight : MonoBehaviour
     }
     public void hideLight()
     {
+        clickAudio.Play();
         if(backgroundImage != null)
         {
             backgroundImage.color = new Color(0.85f, 0.34f, 0.24f, 1f); // 색상 변경

@@ -84819,6 +84819,14 @@ PrefabInstance:
       value: -126.95333
       objectReference: {fileID: 0}
     - target: {fileID: 1201575562811187932, guid: e49dce0a6a30f74459fe998a725eb6c5, type: 3}
+      propertyPath: boomAudio
+      value: 
+      objectReference: {fileID: 5008280546008453352}
+    - target: {fileID: 1201575562811187932, guid: e49dce0a6a30f74459fe998a725eb6c5, type: 3}
+      propertyPath: fireAudio
+      value: 
+      objectReference: {fileID: 7597655655483742497}
+    - target: {fileID: 1201575562811187932, guid: e49dce0a6a30f74459fe998a725eb6c5, type: 3}
       propertyPath: feedbackManager
       value: 
       objectReference: {fileID: 8100987393180295472}

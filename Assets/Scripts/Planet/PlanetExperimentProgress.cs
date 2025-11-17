@@ -14,6 +14,12 @@ public class PlanetExperimentProgress : MonoBehaviour
     public GameObject plant;
     public PlantGrow plantGrow;
 
+    [Header("Sounds")]
+    public AudioSource sandAudio;
+    public AudioSource soilAudio;
+    public AudioSource waterAudio;
+    public AudioSource seedAudio;
+
     void Start()
     {
         dirt.SetActive(false);
@@ -43,11 +49,13 @@ public class PlanetExperimentProgress : MonoBehaviour
             {
                 deskMaterial.ShowHiddenMaterial(new Color(239f / 255f, 155f / 255f, 76f / 255f));
             }
+            sandAudio.Play();
             sourceObj.SetActive(false);
             plantGrow.hasSand = true;
         }
         if(targetObj == seedDesk && sourceObj.name.Contains("Soil"))
         {
+            soilAudio.Play();
             DeskMaterialToggle deskMaterial = FindObjectOfType<DeskMaterialToggle>();
             deskMaterial.ShowHiddenMaterial(new Color(82f/255f, 33f/255f, 7f/255f));
             sourceObj.SetActive(false);
@@ -57,6 +65,7 @@ public class PlanetExperimentProgress : MonoBehaviour
         }
         if(targetObj == seedDesk && sourceObj.name.Contains("Seed"))
         {
+            seedAudio.Play();
             sourceObj.SetActive(false);
             dirt.SetActive(true);
             plantGrow.hasSeed = true;
@@ -64,6 +73,7 @@ public class PlanetExperimentProgress : MonoBehaviour
         }
         if(targetObj == seedDesk && sourceObj.name.Contains("H2O"))
         {
+            waterAudio.Play();
             sourceObj.SetActive(false);
             plant.SetActive(true);
             plantGrow.hasWater = true;

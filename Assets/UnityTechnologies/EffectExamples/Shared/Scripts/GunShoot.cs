@@ -9,6 +9,7 @@ using Debug = UnityEngine.Debug;
 
 public class GunShoot : MonoBehaviour
 {
+    public AudioSource shootAudio;
     public float fireRate = 0.25f;
     public float weaponRange = 20f;
 
@@ -67,6 +68,17 @@ public class GunShoot : MonoBehaviour
             { "Uranus",  (new[] { "H", "He", "O" }, new[] { 0.83f, 0.15f, 0.02f }) },
             { "Neptune", (new[] { "H", "He", "O" }, new[] { 0.8f, 0.18f, 0.02f }) }
         };
+
+        if(shootAudio == null)
+        {
+            shootAudio = GetComponent<AudioSource>();
+        }
+
+        GameObject audioObject = GameObject.Find("Gun Sound"); 
+        if (audioObject != null && shootAudio == null)
+        {
+            shootAudio = audioObject.GetComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -75,6 +87,7 @@ public class GunShoot : MonoBehaviour
         if (!isVRMode && Input.GetButtonDown("Fire1") && Time.time > nextFire && !gunAim.GetIsOutOfBounds())
         {
             nextFire = Time.time + fireRate;
+            shootAudio.Play();
             Shoot();
         }
     }
