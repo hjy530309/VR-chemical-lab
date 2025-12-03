@@ -99,8 +99,8 @@ public class ObjectHighlighter : MonoBehaviour
     }
     public void HighlightItem(string itemName)
     {
-        itemName = itemName.ToLower();
-        if (itemMap.TryGetValue(itemName, out string targetName))
+        string lowerItemName = itemName.ToLower();
+        if (itemMap.TryGetValue(lowerItemName, out string targetName))
         {
             GameObject parent = GameObject.Find(chapter);
             Transform target = parent.transform.FindDeepChild(targetName);
