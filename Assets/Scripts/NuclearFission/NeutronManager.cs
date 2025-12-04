@@ -9,7 +9,7 @@ public class NeutronManager : MonoBehaviour
 
     [Header("Neutron 설정")]
     public GameObject neutronPrefab;
-    public int maxNeutrons = 50;
+    public int maxNeutrons = 200;
     public float initialSpeed = 5f;
 
     [Header("ControlRod")]
@@ -17,7 +17,7 @@ public class NeutronManager : MonoBehaviour
 
     [Header("UI")]
     public TMP_Text dangerText;       // 위험도 표시
-    public int dangerThreshold = 20; // 위험 임계값
+    public int dangerThreshold = 50; // 위험 임계값
 
     private List<Neutron> neutrons = new List<Neutron>();
     private bool isOverThreshold = false;
@@ -32,28 +32,33 @@ public class NeutronManager : MonoBehaviour
             dangerText.text = $"Neutrons: {count}";
 
         // 일정 수 이상이면 모든 중성자 멈춤
-        if (count >= dangerThreshold && !isOverThreshold)
+        //if (count >= dangerThreshold && !isOverThreshold)
+        //{
+        //    isOverThreshold = true;
+        //    StopAllNeutrons();
+        //}
+        //else if (count < dangerThreshold)
+        //{
+        //    isOverThreshold = false;
+        //}
+        if (count >= dangerThreshold)
         {
-            isOverThreshold = true;
-            StopAllNeutrons();
-        }
-        else if (count < dangerThreshold)
-        {
-            isOverThreshold = false;
+            if (ExperimentUI.Instance != null)
+                ExperimentUI.Instance.ShowFail();
         }
     }
 
-    void StopAllNeutrons()
-    {
-        foreach (var n in neutrons)
-        {
-            if (n != null)
-                n.ModifySpeed(0f); // 속도를 0으로
-        }
+    //void StopAllNeutrons()
+    //{
+    //    foreach (var n in neutrons)
+    //    {
+    //        if (n != null)
+    //            n.ModifySpeed(0f); // 속도를 0으로
+    //    }
 
-        if (dangerText != null)
-            dangerText.text += " - DANGER! Chain Reaction STOPPED!";
-    }
+    //    if (dangerText != null)
+    //        dangerText.text += " - DANGER! Chain Reaction STOPPED!";
+    //}
 
     public void RegisterNeutron(Neutron n)
     {

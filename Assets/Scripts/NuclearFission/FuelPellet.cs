@@ -15,6 +15,9 @@ public class FuelPellet : MonoBehaviour
     public ParticleSystem fissionEffect;       // 파티클 Prefab
 
     private bool hasFissioned = false;
+    private int maxFissionCount = 2;
+    private int currentFissionCount = 0;
+
     private Rigidbody rb;
 
     void Awake()
@@ -26,8 +29,11 @@ public class FuelPellet : MonoBehaviour
     }
     public void Fission()
     {
-        if (hasFissioned) return;
-        hasFissioned = true;
+        //if (hasFissioned) return;
+        //hasFissioned = true;
+        if (currentFissionCount >= maxFissionCount) return;
+
+        currentFissionCount++;
 
         // 1 파티클 효과
         if (fissionEffect != null)
